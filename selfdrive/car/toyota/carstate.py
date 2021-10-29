@@ -25,6 +25,9 @@ class CarState(CarStateBase):
     self.low_speed_lockout = False
     self.acc_type = 1
 
+    # KRKeegan - Add support for toyota distance button
+    self.distance_btn = 0
+
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
 
@@ -93,6 +96,10 @@ class CarState(CarStateBase):
 
     if self.CP.carFingerprint in TSS2_CAR:
       self.acc_type = cp_cam.vl["ACC_CONTROL"]["ACC_TYPE"]
+      # KRKeegan - Add support for toyota distance button
+      self.distance_btn = 1 if cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1 else 0
+    
+    ret.distanceLines = cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"]
 
     # some TSS2 cars have low speed lockout permanently set, so ignore on those cars
     # these cars are identified by an ACC_TYPE value of 2.
@@ -156,6 +163,7 @@ class CarState(CarStateBase):
       ("TURN_SIGNALS", "BLINKERS_STATE"),
       ("LKA_STATE", "EPS_STATUS"),
       ("AUTO_HIGH_BEAM", "LIGHT_STALK"),
+      ("DISTANCE_LINES", "PCM_CRUISE_SM"),
     ]
 
     checks = [
@@ -170,6 +178,7 @@ class CarState(CarStateBase):
       ("STEER_ANGLE_SENSOR", 80),
       ("PCM_CRUISE", 33),
       ("STEER_TORQUE_SENSOR", 50),
+      ("PCM_CRUISE_SM", 1),
     ]
 
     if CP.flags & ToyotaFlags.HYBRID:
@@ -204,6 +213,11 @@ class CarState(CarStateBase):
       ]
       checks.append(("BSM", 1))
 
+    # KRKeegan - Add support for toyota distance button
+    if CP.carFingerprint in TSS2_CAR:
+      signals.append(("DISTANCE_LINES", "PCM_CRUISE_SM", 0))
+      checks.append(("PCM_CRUISE_SM", 1))
+
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0)
 
   @staticmethod
@@ -222,5 +236,8 @@ class CarState(CarStateBase):
     if CP.carFingerprint in TSS2_CAR:
       signals.append(("ACC_TYPE", "ACC_CONTROL"))
       checks.append(("ACC_CONTROL", 33))
+
+      # KRKeegan - Add support for toyota distance button
+      signals.append(("DISTANCE", "ACC_CONTROL", 0))
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 2)
