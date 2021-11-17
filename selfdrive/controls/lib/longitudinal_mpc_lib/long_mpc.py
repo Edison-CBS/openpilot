@@ -239,7 +239,7 @@ class LongitudinalMpc:
     W = np.asfortranarray(np.diag([X_EGO_OBSTACLE_COST, X_EGO_COST, V_EGO_COST, A_EGO_COST, a_change_cost, J_EGO_COST]))
     for i in range(N):
       # reduce the cost on (a-a_prev) later in the horizon.
-      W[4,4] = a_change_cost * np.interp(T_IDXS[i], [0.0, 1.0, 2.0], [1.0, 1.0, 0.0])
+      W[4,4] = a_change_cost * np.interp(T_IDXS[i], [0.0, 0.5, 2.0], [1.0, 1.0, 0.0])
       self.solver.cost_set(i, 'W', W)
     # Setting the slice without the copy make the array not contiguous,
     # causing issues with the C interface.
