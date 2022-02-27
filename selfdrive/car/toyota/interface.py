@@ -11,6 +11,12 @@ EventName = car.CarEvent.EventName
 
 
 class CarInterface(CarInterfaceBase):
+  def __init__(self, CP, CarController, CarState):
+    super().__init__(CP, CarController, CarState)
+
+    # init for low speed re-write (dp)
+    self.low_cruise_speed = 0.
+
   @staticmethod
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
     if CP.carFingerprint in TSS2_CAR:
@@ -253,6 +259,19 @@ class CarInterface(CarInterfaceBase):
   # returns a car.CarState
   def _update(self, c):
     ret = self.CS.update(self.cp, self.cp_cam)
+    
+    # low speed re-write (dp)
+    self.cruise_speed_override = True # change this to False if you want to disable cruise speed override
+    if ret.cruiseState.enabled and ret.cruiseState.speed < 45 * CV.KPH_TO_MS and self.CP.openpilotLongitudinalControl:
+      if self.cruise_speed_override:
+        if self.low_cruise_speed == 0.:
+          ret.cruiseState.speed = self.low_cruise_speed = max(24 * CV.KPH_TO_MS, ret.vEgo)
+        else:
+          ret.cruiseState.speed = self.low_cruise_speed
+      else:
+        ret.cruiseState.speed = 24 * CV.KPH_TO_MS
+    else:
+      self.low_cruise_speed = 0.   
 
     ret.steeringRateLimited = self.CC.steer_rate_limited if self.CC is not None else False
 
