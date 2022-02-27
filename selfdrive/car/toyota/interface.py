@@ -10,6 +10,12 @@ EventName = car.CarEvent.EventName
 
 
 class CarInterface(CarInterfaceBase):
+  def __init__(self, CP, CarController, CarState):
+    super().__init__(CP, CarController, CarState)
+
+    # init for low speed re-write (dp)
+    self.low_cruise_speed = 0.
+
   @staticmethod
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
     return CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX
@@ -245,19 +251,20 @@ class CarInterface(CarInterfaceBase):
     self.cp.update_strings(can_strings)
     self.cp_cam.update_strings(can_strings)
 
-    self.init_cruise_speed = 0.
     ret = self.CS.update(self.cp, self.cp_cam)
+
+    # low speed re-write (dp)
     self.cruise_speed_override = True # change this to False if you want to disable cruise speed override
-    if ret.cruiseState.enabled and ret.cruiseState.speed < 12 and self.CP.openpilotLongitudinalControl:
+    if ret.cruiseState.enabled and ret.cruiseState.speed < 45 * CV.KPH_TO_MS and self.CP.openpilotLongitudinalControl:
       if self.cruise_speed_override:
-        if self.init_cruise_speed == 0.:
-          ret.cruiseState.speed = self.init_cruise_speed = 100/9
+        if self.low_cruise_speed == 0.:
+          ret.cruiseState.speed = self.low_cruise_speed = max(24 * CV.KPH_TO_MS, ret.vEgo)
         else:
-          ret.cruiseState.speed = self.init_cruise_speed
+          ret.cruiseState.speed = self.low_cruise_speed
       else:
-        ret.cruiseState.speed = 100/9
+        ret.cruiseState.speed = 24 * CV.KPH_TO_MS
     else:
-      self.init_cruise_speed = 0.
+      self.low_cruise_speed = 0.
 
     ret.canValid = self.cp.can_valid and self.cp_cam.can_valid
     ret.steeringRateLimited = self.CC.steer_rate_limited if self.CC is not None else False
