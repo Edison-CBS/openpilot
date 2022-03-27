@@ -99,6 +99,17 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
     });
   }
 
+  // use the toggled param itself as a condition to allow the toggle to be turned 
+  // off if the comma device does not exist in a SmartDSU vehicle anymore
+  if (params.getBool("ToyotaLongToggle_Allow") or params.getBool("SmartDSULongToggle")) {
+    toggles.push_back({
+      "SmartDSULongToggle",
+      "SmartDSU: Use Stock ACC",
+      "Use the vehicle's factory adaptive cruise control for acceleration and deceleration. Only available on TSS-P vehicles with SmartDSU.",
+      "../assets/offroad/icon_long_control.png",
+    });
+  }  
+
   for (auto &[param, title, desc, icon] : toggles) {
     auto toggle = new ParamControl(param, title, desc, icon, this);
     bool locked = params.getBool((param + "Lock").toStdString());
