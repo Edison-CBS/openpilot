@@ -35,6 +35,14 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       "Use the openpilot system for adaptive cruise control and lane keep driver assistance. Your attention is required at all times to use this feature. Changing this setting takes effect when the car is powered off.",
       "../assets/offroad/icon_openpilot.png",
     },
+    // allow openpilot activation in 
+    // non-adaptive cruise control mode
+    {
+      "AllowNonAdaptiveCruise",
+      "Allow Normal Cruise Control",
+      "Allow steering wheel control in Non-Adaptive Cruise Control mode, to use this feature, hold the Cruise Control ON/OFF button for approximately 3 seconds.",
+      "../assets/offroad/icon_speed_limit.png",
+    },      
     {
       "IsLdwEnabled",
       "Enable Lane Departure Warnings",

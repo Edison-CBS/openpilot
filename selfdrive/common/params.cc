@@ -179,6 +179,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"Offroad_UpdateFailed", CLEAR_ON_MANAGER_START},
 
     // cydia2020 params
+    {"AllowNonAdaptiveCruise", PERSISTENT},
     {"SmartDSULongToggle", PERSISTENT},
     {"ToyotaLongToggle_Allow", CLEAR_ON_IGNITION_ON},
 };

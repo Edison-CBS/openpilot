@@ -28,6 +28,7 @@ class CarInterfaceBase(ABC):
   def __init__(self, CP, CarController, CarState):
     self.CP = CP
     self.VM = VehicleModel(CP)
+    self.allow_non_adaptive_cruise = Params().get_bool("AllowNonAdaptiveCruise")
 
     self.frame = 0
     self.steering_unpressed = 0
@@ -143,7 +144,7 @@ class CarInterfaceBase(ABC):
       events.add(EventName.stockAeb)
     if cs_out.vEgo > MAX_CTRL_SPEED:
       events.add(EventName.speedTooHigh)
-    if cs_out.cruiseState.nonAdaptive:
+    if cs_out.cruiseState.nonAdaptive and not self.allow_non_adaptive_cruise:
       events.add(EventName.wrongCruiseMode)
     if cs_out.brakeHoldActive and self.CP.openpilotLongitudinalControl:
       events.add(EventName.brakeHold)
