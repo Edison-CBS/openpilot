@@ -98,6 +98,8 @@ class CarState(CarStateBase):
       self.acc_type = cp_cam.vl["ACC_CONTROL"]["ACC_TYPE"]
       # KRKeegan - Add support for toyota distance button
       self.distance_btn = 1 if cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1 else 0
+    elif self.CP.smartDsu:
+      self.distance_btn = 1 if cp.vl["SDSU"]["FD_BUTTON"] == 1 else 0
     
     ret.distanceLines = cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"]
 
@@ -217,6 +219,9 @@ class CarState(CarStateBase):
     if CP.carFingerprint in TSS2_CAR:
       signals.append(("DISTANCE_LINES", "PCM_CRUISE_SM", 0))
       checks.append(("PCM_CRUISE_SM", 1))
+    elif CP.smartDsu:
+      signals.append(("FD_BUTTON", "SDSU", 0))
+      checks.append(("SDSU", 33))      
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0)
 
