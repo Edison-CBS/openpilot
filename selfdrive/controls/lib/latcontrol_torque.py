@@ -47,10 +47,12 @@ class LatControlTorque(LatControl):
       if self.use_steering_angle:
         actual_curvature = -VM.calc_curvature(math.radians(CS.steeringAngleDeg - params.angleOffsetDeg), CS.vEgo, params.roll)
       else:
-        actual_curvature = llk.angularVelocityCalibrated.value[2] / CS.vEgo
-      desired_lateral_accel = desired_curvature * CS.vEgo ** 2
-      desired_lateral_jerk = desired_curvature_rate * CS.vEgo ** 2
-      actual_lateral_accel = actual_curvature * CS.vEgo ** 2
+        actual_curvature_vm = -VM.calc_curvature(math.radians(CS.steeringAngleDeg - params.angleOffsetDeg), CS.vEgo, params.roll)
+        actual_curvature_llk = llk.angularVelocityCalibrated.value[2] / CS.vEgo
+        actual_curvature = interp(CS.vEgo, [2.0, 5.0], [actual_curvature_vm, actual_curvature_llk])
+      desired_lateral_accel = desired_curvature * CS.vEgo**2
+      desired_lateral_jerk = desired_curvature_rate * CS.vEgo**2
+      actual_lateral_accel = actual_curvature * CS.vEgo**2
 
       setpoint = desired_lateral_accel + LOW_SPEED_FACTOR * desired_curvature
       measurement = actual_lateral_accel + LOW_SPEED_FACTOR * actual_curvature
