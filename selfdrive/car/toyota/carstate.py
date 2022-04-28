@@ -124,6 +124,9 @@ class CarState(CarStateBase):
     ret.genericToggle = bool(cp.vl["LIGHT_STALK"]["AUTO_HIGH_BEAM"])
     ret.stockAeb = bool(cp_cam.vl["PRE_COLLISION"]["PRECOLLISION_ACTIVE"] and cp_cam.vl["PRE_COLLISION"]["FORCE"] < -1e-5)
 
+    if self.CP.carFingerprint in TSS2_CAR:
+      ret.stockFcw = bool(cp_cam.vl["ACC_HUD"]["FCW"])
+
     ret.espDisabled = cp.vl["ESP_CONTROL"]["TC_DISABLED"] != 0
     # 2 is standby, 10 is active. TODO: check that everything else is really a faulty state
     self.steer_state = cp.vl["EPS_STATUS"]["LKA_STATE"]
@@ -239,8 +242,14 @@ class CarState(CarStateBase):
     ]
 
     if CP.carFingerprint in TSS2_CAR:
-      signals.append(("ACC_TYPE", "ACC_CONTROL"))
-      checks.append(("ACC_CONTROL", 33))
+      signals += [
+        ("ACC_TYPE", "ACC_CONTROL"),
+        ("FCW", "ACC_HUD"),
+      ]
+      checks += [
+        ("ACC_CONTROL", 33),
+        ("ACC_HUD", 1),
+      ]
 
       # KRKeegan - Add support for toyota distance button
       signals.append(("DISTANCE", "ACC_CONTROL", 0))
