@@ -60,7 +60,7 @@ class CarInterface(CarInterfaceBase):
       ret.steerRatio = 18.1
       tire_stiffness_factor = 0.5533
       ret.mass = 3681. * CV.LB_TO_KG + STD_CARGO_KG
-      set_lat_tune(ret.lateralTuning, LatTunes.TORQUE, MAX_LAT_ACCEL=2.0, FRICTION=0.038)
+      set_lat_tune(ret.lateralTuning, LatTunes.LQR_PV)
 
     elif candidate in (CAR.RAV4, CAR.RAV4H):
       stop_and_go = True if (candidate in CAR.RAV4H) else False
