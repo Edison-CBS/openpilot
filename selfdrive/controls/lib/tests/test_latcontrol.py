@@ -9,6 +9,7 @@ from selfdrive.car.honda.values import CAR as HONDA
 from selfdrive.car.toyota.values import CAR as TOYOTA
 from selfdrive.car.nissan.values import CAR as NISSAN
 from selfdrive.controls.lib.latcontrol_pid import LatControlPID
+from selfdrive.controls.lib.latcontrol_lqr import LatControlLQR
 from selfdrive.controls.lib.latcontrol_torque import LatControlTorque
 from selfdrive.controls.lib.latcontrol_indi import LatControlINDI
 from selfdrive.controls.lib.latcontrol_angle import LatControlAngle
