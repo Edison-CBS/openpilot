@@ -29,6 +29,8 @@ class CarController:
 
     self.rate_limit_counter = 0
 
+    self.rate_limit_counter = 0
+
     self.packer = CANPacker(dbc_name)
     self.gas = 0
     self.accel = 0
