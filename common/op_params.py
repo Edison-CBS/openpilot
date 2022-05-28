@@ -113,7 +113,7 @@ class opParams:
                                              'auto will reboot the device when an update is seen', static=True),
       'dynamic_gas': Param(False, bool, 'Whether to use dynamic gas if your car is supported'),
       'hide_auto_df_alerts': Param(False, bool, 'Hides the alert that shows what profile the model has chosen'),
-      'df_button_alerts': Param('audible', str, 'Can be: (\'off\', \'silent\', \'audible\')\n'
+      'df_button_alerts': Param('silent', str, 'Can be: (\'off\', \'silent\', \'audible\')\n'
                                                 'How you want to be alerted when you change your dynamic following profile'),
       # 'log_auto_df': Param(False, bool, 'Logs dynamic follow data for auto-df', static=True),
       # 'dynamic_camera_offset': Param(False, bool, 'Whether to automatically keep away from oncoming traffic.\n'
@@ -128,7 +128,7 @@ class opParams:
                                                'Warning: the model may behave unexpectedly at any time, so always pay attention', static=True),
       'rav4TSS2_use_indi': Param(False, bool, 'Enable this to use INDI for lat with your TSS2 RAV4', static=True),
       'standstill_hack': Param(False, bool, 'Some cars support stop and go, you just need to enable this', static=True),
-      'toyota_distance_btn': Param(True, bool, 'Set to True to use the steering wheel distance button to control the dynamic follow profile.\n'
+      'toyota_distance_btn': Param(False, bool, 'Set to True to use the steering wheel distance button to control the dynamic follow profile.\n'
                                                 'Works on TSS2 vehicles and on TSS1 vehicles with an sDSU with a Sep. 2020 firmware or newer.', static=True),
 
       'dynamic_follow': Param('auto', str, static=True, hidden=True),
