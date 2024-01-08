@@ -1,7 +1,8 @@
-from openpilot.common.params_pyx import Params, ParamKeyType, UnknownKeyName
+from openpilot.common.params_pyx import Params, ParamKeyType, UnknownKeyName, put_int_nonblocking
 assert Params
 assert ParamKeyType
 assert UnknownKeyName
+assert put_int_nonblocking
 
 if __name__ == "__main__":
   import sys

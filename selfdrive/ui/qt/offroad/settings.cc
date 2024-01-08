@@ -66,6 +66,36 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       "../assets/offroad/icon_monitoring.png",
     },
     {
+      "LQR",
+      tr("Use LQR on Lat Control for PA"),
+      tr("When enabled, using LQR on lat control for prius alpha."),
+      "../assets/offroad/icon_openpilot.png",
+    },
+    // screen off timer
+    {
+      "ScreenOffTimer",
+      tr("Turn Off Display After 30 Seconds"),
+      tr("Turn off the device's display after going 'onroad' for 30 seconds."),
+      "../assets/offroad/icon_display_off.png",
+    },
+    // cruise speed rewrite, stolen from dragonpilot
+    {
+      "CruiseSpeedRewrite",
+      tr("Long: Cruise Speed Override"),
+      tr("Allow openpilot's set speed to be set below the vehicle's minimum cruise speed. "
+         "To use this feature, when the vehicle is travelling below its minimum set speed, "
+         "pull the cruise control lever down (or click the cruise control SET button) once, "
+         "openpilot will set its maximum speed to the vehicle's current speed."),
+      "../assets/offroad/icon_cruise_speed_rewrite.png",
+    },
+    // DriverCamera, stolen from FrogPilot
+    {
+      "DriverCamera",
+      tr("Driver Camera On Reverse"),
+      tr("Displays the driver camera when in reverse."),
+      "../assets/img_driver_face_static.png",
+    },
+    {
       "IsMetric",
       tr("Use Metric System"),
       tr("Display speed in km/h instead of mph."),
@@ -94,6 +124,13 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
                                              "In relaxed mode openpilot will stay further away from lead cars."),
                                           "../assets/offroad/icon_speed_limit.png",
                                           longi_button_texts);
+
+  driving_personalities_ui_wheel_Toggle = new ParamControl("DrivingPersonalitiesUIWheel",
+                                                  tr("Driving Personalities Via UI / Wheel"),
+                                                  tr("Switch driving personalities using the 'Distance' button on the steering wheel (Toyota/Lexus Only) "
+                                                    "or via the onroad UI for other makes.\n\n1 bar = Aggressive\n2 bars = Standard\n3 bars = Relaxed"),
+                                                  "../assets/offroad/icon_distance.png");
+
   for (auto &[param, title, desc, icon] : toggle_defs) {
     auto toggle = new ParamControl(param, title, desc, icon, this);
 
@@ -106,6 +143,7 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
     // insert longitudinal personality after NDOG toggle
     if (param == "DisengageOnAccelerator") {
       addItem(long_personality_setting);
+      addItem(driving_personalities_ui_wheel_Toggle);
     }
   }
 
@@ -166,10 +204,13 @@ void TogglesPanel::updateToggles() {
       experimental_mode_toggle->setEnabled(true);
       experimental_mode_toggle->setDescription(e2e_description);
       long_personality_setting->setEnabled(true);
+      driving_personalities_ui_wheel_Toggle->setEnabled(true);
+      long_personality_setting->refresh();
     } else {
       // no long for now
       experimental_mode_toggle->setEnabled(false);
       long_personality_setting->setEnabled(false);
+      driving_personalities_ui_wheel_Toggle->setEnabled(false);
       params.remove("ExperimentalMode");
 
       const QString unavailable = tr("Experimental mode is currently unavailable on this car since the car's stock ACC is used for longitudinal control.");

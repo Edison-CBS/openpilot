@@ -4,6 +4,7 @@ from cereal import car
 from openpilot.common.conversions import Conversions as CV
 from openpilot.common.numpy_fast import mean
 from openpilot.common.filter_simple import FirstOrderFilter
+from openpilot.common.params import Params, put_int_nonblocking
 from openpilot.common.realtime import DT_CTRL
 from opendbc.can.can_define import CANDefine
 from opendbc.can.parser import CANParser
@@ -43,6 +44,14 @@ class CarState(CarStateBase):
     self.low_speed_lockout = False
     self.acc_type = 1
     self.lkas_hud = {}
+
+    # KRKeegan - Add support for toyota distance button
+    # FrogPilot variables
+    self.params = Params()
+    self.driving_personalities_via_wheel = self.params.get_bool("DrivingPersonalitiesUIWheel")
+    self.distance_btn = 0
+    self.distance_lines = 0
+    self.previous_distance_lines = 0
 
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
@@ -160,6 +169,24 @@ class CarState(CarStateBase):
     if self.CP.carFingerprint != CAR.PRIUS_V:
       self.lkas_hud = copy.copy(cp_cam.vl["LKAS_HUD"])
 
+    # Driving personalities function
+    if self.driving_personalities_via_wheel:
+      # KRKeegan - Add support for toyota distance button
+      # order must be: RADAR_ACC_CAR --> TSS2_CAR --> smartDsu
+      # cp_acc dynamic according to car carFingerprint
+      if self.CP.carFingerprint in (TSS2_CAR | RADAR_ACC_CAR):
+        if not (self.CP.flags & ToyotaFlags.SMART_DSU.value):
+          self.distance_btn = 1 if cp_acc.vl["ACC_CONTROL"]["DISTANCE"] == 1 else 0
+          # Need to subtract by 1 to comply with the personality profiles of "0", "1", and "2"
+          self.distance_lines = max(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"] - 1, 0)
+      elif bool(self.CP.flags & ToyotaFlags.SMART_DSU):
+        self.distance_btn = 1 if cp_acc.vl["SDSU"]["FD_BUTTON"] == 1 else 0
+        self.distance_lines = max(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"] - 1, 0)
+
+      if self.distance_lines != self.previous_distance_lines:
+        put_int_nonblocking('LongitudinalPersonality', self.distance_lines)
+        self.previous_distance_lines = self.distance_lines
+
     return ret
 
   @staticmethod
@@ -193,12 +220,18 @@ class CarState(CarStateBase):
     if CP.enableBsm:
       messages.append(("BSM", 1))
 
+    # KRKeegan - Add support for toyota distance button
+    if bool(CP.flags & ToyotaFlags.SMART_DSU):
+      messages.append(("SDSU", 0))
+
     if CP.carFingerprint in RADAR_ACC_CAR and not CP.flags & ToyotaFlags.DISABLE_RADAR.value:
       if not CP.flags & ToyotaFlags.SMART_DSU.value:
         messages += [
           ("ACC_CONTROL", 33),
         ]
       messages += [
+        # try to fix duplicate message check
+        #("ACC_CONTROL", 0),
         ("PCS_HUD", 1),
       ]
 
@@ -206,6 +239,10 @@ class CarState(CarStateBase):
       messages += [
         ("PRE_COLLISION", 33),
       ]
+
+#    try to fix duplicate message check
+#    if CP.carFingerprint in (TSS2_CAR | RADAR_ACC_CAR | NO_STOP_TIMER_CAR):
+#      messages.append(("PCM_CRUISE_SM", 0))
 
     return CANParser(DBC[CP.carFingerprint]["pt"], messages, 0)
 
