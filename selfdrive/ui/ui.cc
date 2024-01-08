@@ -201,6 +201,12 @@ static void update_state(UIState *s) {
   if (sm.updated("carParams")) {
     scene.longitudinal_control = sm["carParams"].getCarParams().getOpenpilotLongitudinalControl();
   }
+  if (sm.updated("carState")) {
+    const auto carState = sm["carState"].getCarState();
+    if (scene.driver_camera) {
+      scene.show_driver_camera = carState.getGearShifter() == cereal::CarState::GearShifter::REVERSE;
+    }
+  }
   if (sm.updated("wideRoadCameraState")) {
     auto cam_state = sm["wideRoadCameraState"].getWideRoadCameraState();
     float scale = (cam_state.getSensor() == cereal::FrameData::ImageSensor::AR0231) ? 6.0f : 1.0f;
@@ -219,6 +225,21 @@ void ui_update_params(UIState *s) {
   auto params = Params();
   s->scene.is_metric = params.getBool("IsMetric");
   s->scene.map_on_left = params.getBool("NavSettingLeftSide");
+  s->scene.screen_off_timer = Params().getBool("ScreenOffTimer");
+  
+  // FrogPilot variables
+  UIScene &scene = s->scene;
+  scene.driving_personalities_ui_wheel = params.getBool("DrivingPersonalitiesUIWheel");
+  scene.driver_camera = params.getBool("DriverCamera");
+}
+
+void ui_live_update_params(UIState *s) {
+  static auto params = Params();
+  UIScene &scene = s->scene;
+  // FrogPilot variables that need to be updated live
+  if (scene.driving_personalities_ui_wheel) {
+    scene.personality_profile = params.getInt("LongitudinalPersonality");
+  }
 }
 
 void UIState::updateStatus() {
@@ -241,6 +262,11 @@ void UIState::updateStatus() {
     started_prev = scene.started;
     scene.world_objects_visible = false;
     emit offroadTransition(!scene.started);
+  }
+
+  // Update the live parameters every 5hz
+  if (sm->frame % (UI_FREQ / 5) == 0 || !scene.started) {
+    ui_live_update_params(uiState());
   }
 }
 

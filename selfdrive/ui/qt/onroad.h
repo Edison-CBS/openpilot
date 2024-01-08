@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <utility>
 
 #include <QPushButton>
 #include <QStackedLayout>
@@ -43,6 +44,10 @@ private:
   void changeMode();
 
   Params params;
+
+  // FrogPilot variables
+  const UIScene &scene;
+
   QPixmap engage_img;
   QPixmap experimental_img;
   bool experimental_mode;
@@ -66,6 +71,10 @@ private:
 class AnnotatedCameraWidget : public CameraWidget {
   Q_OBJECT
 
+  // FrogPilot properties
+  Q_PROPERTY(bool drivingPersonalitiesUIWheel MEMBER drivingPersonalitiesUIWheel);
+  Q_PROPERTY(int personalityProfile MEMBER personalityProfile);
+
 public:
   explicit AnnotatedCameraWidget(VisionStreamType type, QWidget* parent = 0);
   void updateState(const UIState &s);
@@ -74,6 +83,9 @@ public:
 
 private:
   void drawText(QPainter &p, int x, int y, const QString &text, int alpha = 255);
+
+  // FrogPilot widgets
+  void drawDrivingPersonalities(QPainter &p);
 
   QVBoxLayout *main_layout;
   ExperimentalButton *experimental_btn;
@@ -97,6 +109,13 @@ private:
   int skip_frame_count = 0;
   bool wide_cam_requested = false;
 
+  // FrogPilot variables
+  bool drivingPersonalitiesUIWheel;
+  int personalityProfile;
+  const UIScene &scene;
+  bool showDriverCamera;
+  QVector<std::pair<QPixmap, QString>> profile_data;
+  
 protected:
   void paintGL() override;
   void initializeGL() override;

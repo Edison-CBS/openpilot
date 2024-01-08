@@ -7,6 +7,7 @@
 #include <sstream>
 
 #include <QDebug>
+#include <QElapsedTimer>
 #include <QMouseEvent>
 
 #include "common/swaglog.h"
@@ -101,8 +102,42 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
     map->setVisible(show_map && !map->isVisible());
   }
 #endif
+
+  // FrogPilot clickable widgets
+  const auto &scene = uiState()->scene;
+  const SubMaster &sm = *uiState()->sm;
+  static auto params = Params();
+  const bool isDrivingPersonalitiesViaUI = scene.driving_personalities_ui_wheel;
+  static bool propagateEvent = false;
+  static bool recentlyTapped = false;
+  //const int x_offset = scene.mute_dm ? 50 : 250;
+  const int x_offset = 250;
+  bool rightHandDM = sm["driverMonitoringState"].getDriverMonitoringState().getIsRHD();
+
+  // Driving personalities button
+  int x = rightHandDM ? rect().right() - (btn_size - 24) / 2 - (UI_BORDER_SIZE * 2) - x_offset : (btn_size - 24) / 2 + (UI_BORDER_SIZE * 2) + x_offset;
+  //const int y = rect().bottom() - (scene.conditional_experimental ? 20 : 0) - 140;
+  const int y = rect().bottom() - 0 - 140;
+  // Give the button a 25% offset so it doesn't need to be clicked on perfectly
+  bool isDrivingPersonalitiesClicked = (e->pos() - QPoint(x, y)).manhattanLength() <= btn_size * 1.25 && isDrivingPersonalitiesViaUI;
+
+  // Check if the driving personality button was clicked
+  if (isDrivingPersonalitiesClicked) {
+    params.putInt("LongitudinalPersonality", (scene.personality_profile + 2) % 3);
+    propagateEvent = false;
+  // If the click wasn't on the button for driving personalities, change the value of "ExperimentalMode" and "ConditionalStatus"
+  } else if (recentlyTapped) {
+    recentlyTapped = false;
+    propagateEvent = true;
+  } else {
+    recentlyTapped = true;
+    propagateEvent = true;
+  }
+
   // propagation event to parent(HomeWindow)
-  QWidget::mousePressEvent(e);
+  if (propagateEvent) {
+    QWidget::mousePressEvent(e);
+  }
 }
 
 void OnroadWindow::offroadTransition(bool offroad) {
@@ -155,7 +190,9 @@ void OnroadAlerts::updateAlert(const Alert &a) {
 }
 
 void OnroadAlerts::paintEvent(QPaintEvent *event) {
-  if (alert.size == cereal::ControlsState::AlertSize::NONE) {
+  const UIScene &scene = uiState()->scene;
+
+  if (alert.size == cereal::ControlsState::AlertSize::NONE || scene.show_driver_camera) {
     return;
   }
   static std::map<cereal::ControlsState::AlertSize, const int> alert_heights = {
@@ -212,7 +249,7 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
 }
 
 // ExperimentalButton
-ExperimentalButton::ExperimentalButton(QWidget *parent) : experimental_mode(false), engageable(false), QPushButton(parent) {
+ExperimentalButton::ExperimentalButton(QWidget *parent) : experimental_mode(false), engageable(false), QPushButton(parent), scene(uiState()->scene) {
   setFixedSize(btn_size, btn_size);
 
   engage_img = loadPixmap("../assets/img_chffr_wheel.png", {img_size, img_size});
@@ -241,7 +278,9 @@ void ExperimentalButton::updateState(const UIState &s) {
 void ExperimentalButton::paintEvent(QPaintEvent *event) {
   QPainter p(this);
   QPixmap img = experimental_mode ? experimental_img : engage_img;
-  drawIcon(p, QPoint(btn_size / 2, btn_size / 2), img, QColor(0, 0, 0, 166), (isDown() || !engageable) ? 0.6 : 1.0);
+  if (!scene.show_driver_camera) {
+    drawIcon(p, QPoint(btn_size / 2, btn_size / 2), img, QColor(0, 0, 0, 166), (isDown() || !engageable) ? 0.6 : 1.0);
+  }
 }
 
 
@@ -262,7 +301,7 @@ void MapSettingsButton::paintEvent(QPaintEvent *event) {
 
 
 // Window that shows camera view and variety of info drawn on top
-AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* parent) : fps_filter(UI_FREQ, 3, 1. / UI_FREQ), CameraWidget("camerad", type, true, parent) {
+AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* parent) : fps_filter(UI_FREQ, 3, 1. / UI_FREQ), CameraWidget("camerad", type, true, parent), scene(uiState()->scene) {
   pm = std::make_unique<PubMaster, const std::initializer_list<const char *>>({"uiDebug"});
 
   main_layout = new QVBoxLayout(this);
@@ -276,6 +315,13 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
   main_layout->addWidget(map_settings_btn, 0, Qt::AlignBottom | Qt::AlignRight);
 
   dm_img = loadPixmap("../assets/img_driver_face.png", {img_size + 5, img_size + 5});
+
+  // Driving personalities profiles
+  profile_data = {
+    {QPixmap("../assets/aggressive.png"), "Aggressive"},
+    {QPixmap("../assets/standard.png"), "Standard"},
+    {QPixmap("../assets/relaxed.png"), "Relaxed"}
+  };
 }
 
 void AnnotatedCameraWidget::updateState(const UIState &s) {
@@ -310,7 +356,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   has_eu_speed_limit = (nav_alive && speed_limit_sign == cereal::NavInstruction::SpeedLimitSign::VIENNA);
   is_metric = s.scene.is_metric;
   speedUnit =  s.scene.is_metric ? tr("km/h") : tr("mph");
-  hideBottomIcons = (cs.getAlertSize() != cereal::ControlsState::AlertSize::NONE);
+  hideBottomIcons = (cs.getAlertSize() != cereal::ControlsState::AlertSize::NONE || showDriverCamera);
   status = s.status;
 
   // update engageability/experimental mode button
@@ -322,6 +368,13 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   rightHandDM = dm_state.getIsRHD();
   // DM icon transition
   dm_fade_state = std::clamp(dm_fade_state+0.2*(0.5-dmActive), 0.0, 1.0);
+
+  // FrogPilot variables
+  showDriverCamera = scene.show_driver_camera;
+
+  // FrogPilot properties
+  setProperty("drivingPersonalitiesUIWheel", s.scene.driving_personalities_ui_wheel);
+  setProperty("personalityProfile", s.scene.personality_profile);
 
   // hide map settings button for alerts and flip for right hand DM
   if (map_settings_btn->isEnabled()) {
@@ -426,6 +479,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   drawText(p, rect().center().x(), 290, speedUnit, 200);
 
   p.restore();
+
+  // Driving personalities button - Hide the button when the turn signal animation is on
+  if (drivingPersonalitiesUIWheel) {
+    drawDrivingPersonalities(p);
+  }
 }
 
 void AnnotatedCameraWidget::drawText(QPainter &p, int x, int y, const QString &text, int alpha) {
@@ -468,7 +526,6 @@ void AnnotatedCameraWidget::updateFrameMat() {
 void AnnotatedCameraWidget::drawLaneLines(QPainter &painter, const UIState *s) {
   painter.save();
 
-  const UIScene &scene = s->scene;
   SubMaster &sm = *(s->sm);
 
   // lanelines
@@ -525,8 +582,6 @@ void AnnotatedCameraWidget::drawLaneLines(QPainter &painter, const UIState *s) {
 }
 
 void AnnotatedCameraWidget::drawDriverState(QPainter &painter, const UIState *s) {
-  const UIScene &scene = s->scene;
-
   painter.save();
 
   // base icon
@@ -637,7 +692,7 @@ void AnnotatedCameraWidget::paintGL() {
       // for replay of old routes, never go to widecam
       wide_cam_requested = wide_cam_requested && s->scene.calibration_wide_valid;
     }
-    CameraWidget::setStreamType(wide_cam_requested ? VISION_STREAM_WIDE_ROAD : VISION_STREAM_ROAD);
+    CameraWidget::setStreamType(showDriverCamera ? VISION_STREAM_DRIVER : wide_cam_requested ? VISION_STREAM_WIDE_ROAD : VISION_STREAM_ROAD);
 
     s->scene.wide_cam = CameraWidget::getStreamType() == VISION_STREAM_WIDE_ROAD;
     if (s->scene.calibration_valid) {
@@ -654,31 +709,33 @@ void AnnotatedCameraWidget::paintGL() {
   painter.setRenderHint(QPainter::Antialiasing);
   painter.setPen(Qt::NoPen);
 
-  if (s->scene.world_objects_visible) {
-    update_model(s, model, sm["uiPlan"].getUiPlan());
-    drawLaneLines(painter, s);
+  if (!showDriverCamera) {
+    if (s->scene.world_objects_visible) {
+      update_model(s, model, sm["uiPlan"].getUiPlan());
+      drawLaneLines(painter, s);
 
-    if (s->scene.longitudinal_control && sm.rcv_frame("radarState") > s->scene.started_frame) {
-      auto radar_state = sm["radarState"].getRadarState();
-      update_leads(s, radar_state, model.getPosition());
-      auto lead_one = radar_state.getLeadOne();
-      auto lead_two = radar_state.getLeadTwo();
-      if (lead_one.getStatus()) {
-        drawLead(painter, lead_one, s->scene.lead_vertices[0]);
-      }
-      if (lead_two.getStatus() && (std::abs(lead_one.getDRel() - lead_two.getDRel()) > 3.0)) {
-        drawLead(painter, lead_two, s->scene.lead_vertices[1]);
+      if (s->scene.longitudinal_control && sm.rcv_frame("radarState") > s->scene.started_frame) {
+        auto radar_state = sm["radarState"].getRadarState();
+        update_leads(s, radar_state, model.getPosition());
+        auto lead_one = radar_state.getLeadOne();
+        auto lead_two = radar_state.getLeadTwo();
+        if (lead_one.getStatus()) {
+          drawLead(painter, lead_one, s->scene.lead_vertices[0]);
+        }
+        if (lead_two.getStatus() && (std::abs(lead_one.getDRel() - lead_two.getDRel()) > 3.0)) {
+          drawLead(painter, lead_two, s->scene.lead_vertices[1]);
+        }
       }
     }
-  }
 
-  // DMoji
-  if (!hideBottomIcons && (sm.rcv_frame("driverStateV2") > s->scene.started_frame)) {
-    update_dmonitoring(s, sm["driverStateV2"].getDriverStateV2(), dm_fade_state, rightHandDM);
-    drawDriverState(painter, s);
-  }
+    // DMoji
+    if (!hideBottomIcons && (sm.rcv_frame("driverStateV2") > s->scene.started_frame)) {
+      update_dmonitoring(s, sm["driverStateV2"].getDriverStateV2(), dm_fade_state, rightHandDM);
+      drawDriverState(painter, s);
+    }
 
-  drawHud(painter);
+    drawHud(painter);
+  }
 
   double cur_draw_t = millis_since_boot();
   double dt = cur_draw_t - prev_draw_t;
@@ -700,4 +757,62 @@ void AnnotatedCameraWidget::showEvent(QShowEvent *event) {
 
   ui_update_params(uiState());
   prev_draw_t = millis_since_boot();
+}
+
+// FrogPilot widgets
+
+void AnnotatedCameraWidget::drawDrivingPersonalities(QPainter &p) {
+  // Declare the variables
+  static QElapsedTimer timer;
+  static bool displayText = false;
+  static int lastProfile = -1;
+  constexpr int fadeDuration = 1000; // 1 second
+  constexpr int textDuration = 3000; // 3 seconds
+  //int x = rightHandDM ? rect().right() - (btn_size - 24) / 2 - (UI_BORDER_SIZE * 2) - (muteDM ? 50 : 250) : (btn_size - 24) / 2 + (UI_BORDER_SIZE * 2) + (muteDM ? 50 : 250);
+  //const int y = rect().bottom() - (conditionalExperimental ? 20 : 0) - 140;
+  int x = rightHandDM ? rect().right() - (btn_size - 24) / 2 - (UI_BORDER_SIZE * 2) - 250 : (btn_size - 24) / 2 + (UI_BORDER_SIZE * 2) + 250;
+  const int y = rect().bottom() - 100;
+
+  // Enable Antialiasing
+  p.setRenderHint(QPainter::Antialiasing);
+  p.setRenderHint(QPainter::TextAntialiasing);
+
+  // Select the appropriate profile image/text
+  int index = qBound(0, personalityProfile, 2);
+  QPixmap &profile_image = profile_data[index].first;
+  QString profile_text = profile_data[index].second;
+
+  // Display the profile text when the user changes profiles
+  if (lastProfile != personalityProfile) {
+    displayText = true;
+    lastProfile = personalityProfile;
+    timer.restart();
+  }
+
+  // Set the text display
+  displayText = !timer.hasExpired(textDuration);
+
+  // Set the elapsed time since the profile switch
+  int elapsed = timer.elapsed();
+
+  // Calculate the opacity for the text and image based on the elapsed time
+  qreal textOpacity = qBound(0.0, (1.0 - static_cast<qreal>(elapsed - textDuration) / fadeDuration), 1.0);
+  qreal imageOpacity = qBound(0.0, (static_cast<qreal>(elapsed - textDuration) / fadeDuration), 1.0);
+
+  // Draw the profile text with the calculated opacity
+  if (textOpacity > 0.0) {
+    p.setFont(InterFont(50, QFont::Bold));
+    p.setPen(QColor(255, 255, 255));
+    // Calculate the center position for text
+    QFontMetrics fontMetrics(p.font());
+    int textWidth = fontMetrics.horizontalAdvance(profile_text);
+    // Apply opacity to the text
+    p.setOpacity(textOpacity);
+    p.drawText(x - textWidth / 2, y + fontMetrics.height() / 2, profile_text);
+  }
+
+  // Draw the profile image with the calculated opacity
+  if (imageOpacity > 0.0) {
+    drawIcon(p, QPoint(x, y), profile_image, blackColor(0), imageOpacity);
+  }
 }

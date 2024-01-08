@@ -1107,6 +1107,50 @@ Cela peut prendre jusqu&apos;à une minute.</translation>
         <source>Enable the openpilot longitudinal control (alpha) toggle to allow Experimental mode.</source>
         <translation>Activer le contrôle longitudinal d&apos;openpilot (en alpha) pour autoriser le mode expérimental.</translation>
     </message>
+    <message>
+        <source>Use LQR on Lat Control for PA</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When enabled, using LQR on lat control for prius alpha.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Turn Off Display After 30 Seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Turn off the device&apos;s display after going &apos;onroad&apos; for 30 seconds.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Long: Cruise Speed Override</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow openpilot&apos;s set speed to be set below the vehicle&apos;s minimum cruise speed. To use this feature, when the vehicle is travelling below its minimum set speed, pull the cruise control lever down (or click the cruise control SET button) once, openpilot will set its maximum speed to the vehicle&apos;s current speed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Driving Personalities Via UI / Wheel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch driving personalities using the &apos;Distance&apos; button on the steering wheel (Toyota/Lexus Only) or via the onroad UI for other makes.
+
+1 bar = Aggressive
+2 bars = Standard
+3 bars = Relaxed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Driver Camera On Reverse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Displays the driver camera when in reverse.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Updater</name>

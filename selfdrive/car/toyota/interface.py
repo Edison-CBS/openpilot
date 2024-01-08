@@ -1,7 +1,9 @@
 from cereal import car
 from openpilot.common.conversions import Conversions as CV
+from openpilot.common.params import Params
 from panda import Panda
 from panda.python import uds
+from openpilot.selfdrive.car.toyota.tunes import LatTunes, set_lat_tune
 from openpilot.selfdrive.car.toyota.values import Ecu, CAR, DBC, ToyotaFlags, CarControllerParams, TSS2_CAR, RADAR_ACC_CAR, NO_DSU_CAR, \
                                         MIN_ACC_SPEED, EPS_SCALE, UNSUPPORTED_DSU_CAR, NO_STOP_TIMER_CAR, ANGLE_CONTROL_CAR
 from openpilot.selfdrive.car import get_safety_config
@@ -10,9 +12,14 @@ from openpilot.selfdrive.car.interfaces import CarInterfaceBase
 
 EventName = car.CarEvent.EventName
 SteerControlType = car.CarParams.SteerControlType
-
+GearShifter = car.CarState.GearShifter
 
 class CarInterface(CarInterfaceBase):
+  def __init__(self, CP, CarController, CarState):
+    super().__init__(CP, CarController, CarState)
+
+    self.override_speed = 0.
+
   @staticmethod
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
     return CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX
@@ -59,9 +66,11 @@ class CarInterface(CarInterfaceBase):
     elif candidate == CAR.PRIUS_V:
       stop_and_go = True
       ret.wheelbase = 2.78
-      ret.steerRatio = 17.4
+      ret.steerRatio = 16.8
       ret.tireStiffnessFactor = 0.5533
       ret.mass = 3340. * CV.LB_TO_KG
+      if Params().get_bool("LQR"):
+        set_lat_tune(ret.lateralTuning, LatTunes.LQR_PV)
 
     elif candidate in (CAR.RAV4, CAR.RAV4H):
       stop_and_go = True if (candidate in CAR.RAV4H) else False
@@ -286,9 +295,23 @@ class CarInterface(CarInterfaceBase):
   # returns a car.CarState
   def _update(self, c):
     ret = self.CS.update(self.cp, self.cp_cam)
+    params = Params()
+
+    # low speed re-write
+    if ret.cruiseState.enabled and params.get_bool("CruiseSpeedRewrite") and \
+      self.CP.openpilotLongitudinalControl and ret.cruiseState.speed < 45. * CV.KPH_TO_MS:
+      if params.get_bool("CruiseSpeedRewrite"):
+        if self.override_speed == 0.:
+          ret.cruiseState.speed = ret.cruiseState.speedCluster = self.override_speed = max(24. * CV.KPH_TO_MS, ret.vEgo)
+        else:
+          ret.cruiseState.speed = ret.cruiseState.speedCluster = self.override_speed
+      else:
+        ret.cruiseState.speed = ret.cruiseState.speedCluster = 24. * CV.KPH_TO_MS
+    else:
+      self.override_speed = 0.
 
     # events
-    events = self.create_common_events(ret)
+    events = self.create_common_events(ret, extra_gears=[GearShifter.sport])
 
     # Lane Tracing Assist control is unavailable (EPS_STATUS->LTA_STATE=0) until
     # the more accurate angle sensor signal is initialized

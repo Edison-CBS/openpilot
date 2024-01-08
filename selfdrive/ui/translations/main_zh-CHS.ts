@@ -1103,6 +1103,50 @@ This may take up to a minute.</source>
         <source>The driving visualization will transition to the road-facing wide-angle camera at low speeds to better show some turns. The Experimental mode logo will also be shown in the top right corner. When a navigation destination is set and the driving model is using it as input, the driving path on the map will turn green.</source>
         <translation>行驶画面将在低速时切换到道路朝向的广角摄像头，以更好地显示一些转弯。实验模式标志也将显示在右上角。当设置了导航目的地并且驾驶模型正在使用它作为输入时，地图上的驾驶路径将变为绿色。</translation>
     </message>
+    <message>
+        <source>Use LQR on Lat Control for PA</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When enabled, using LQR on lat control for prius alpha.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Turn Off Display After 30 Seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Turn off the device&apos;s display after going &apos;onroad&apos; for 30 seconds.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Long: Cruise Speed Override</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow openpilot&apos;s set speed to be set below the vehicle&apos;s minimum cruise speed. To use this feature, when the vehicle is travelling below its minimum set speed, pull the cruise control lever down (or click the cruise control SET button) once, openpilot will set its maximum speed to the vehicle&apos;s current speed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Driving Personalities Via UI / Wheel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch driving personalities using the &apos;Distance&apos; button on the steering wheel (Toyota/Lexus Only) or via the onroad UI for other makes.
+
+1 bar = Aggressive
+2 bars = Standard
+3 bars = Relaxed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Driver Camera On Reverse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Displays the driver camera when in reverse.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Updater</name>

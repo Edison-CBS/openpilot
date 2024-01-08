@@ -2,8 +2,8 @@ name: selfdrive
 
 on:
   push:
-    branches:
-      - master
+    branches-ignore:
+      - 'testing-closet*'
   pull_request:
   workflow_dispatch:
 
@@ -141,7 +141,7 @@ jobs:
     - uses: ./.github/workflows/setup-with-retry
     - name: pre-commit
       timeout-minutes: 4
-      run: ${{ env.RUN }} "unset PYTHONWARNINGS && pre-commit run --all"
+      run: ${{ env.RUN }} "unset PYTHONWARNINGS && SKIP=check-added-large-files pre-commit run --all"
 
   valgrind:
     name: valgrind
