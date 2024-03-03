@@ -66,6 +66,26 @@
         <source>Prevent large data uploads when on a metered connection</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Hidden Network</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CONNECT</source>
+        <translation type="unfinished">CONNECT</translation>
+    </message>
+    <message>
+        <source>Enter SSID</source>
+        <translation type="unfinished">SSID eingeben</translation>
+    </message>
+    <message>
+        <source>Enter password</source>
+        <translation type="unfinished">Passwort eingeben</translation>
+    </message>
+    <message>
+        <source>for &quot;%1&quot;</source>
+        <translation type="unfinished">für &quot;%1&quot;</translation>
+    </message>
 </context>
 <context>
     <name>AnnotatedCameraWidget</name>
@@ -98,7 +118,7 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -296,7 +316,7 @@
     <name>InputDialog</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
     <message numerus="yes">
         <source>Need at least %n character(s)!</source>
@@ -362,7 +382,7 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -373,11 +393,11 @@
     </message>
     <message>
         <source>Enter password</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Passwort eingeben</translation>
     </message>
     <message>
         <source>for &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">für &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Wrong password</source>
@@ -482,7 +502,7 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -554,12 +574,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>dashcam</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>openpilot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">openpilot</translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s) ago</source>
@@ -587,6 +603,30 @@
     <name>Reset</name>
     <message>
         <source>Reset failed. Reboot to try again.</source>
+        <translation>Zurücksetzen fehlgeschlagen. Starte das Gerät neu und versuche es wieder.</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to reset your device?</source>
+        <translation>Bist du sicher, dass du das Gerät auf Werkseinstellungen zurücksetzen möchtest?</translation>
+    </message>
+    <message>
+        <source>System Reset</source>
+        <translation>System auf Werkseinstellungen zurücksetzen</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Reboot</source>
+        <translation>Neustart</translation>
+    </message>
+    <message>
+        <source>Confirm</source>
+        <translation>Bestätigen</translation>
+    </message>
+    <message>
+        <source>Unable to mount data partition. Partition may be corrupted. Press confirm to erase and reset your device.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -595,31 +635,7 @@ This may take up to a minute.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Are you sure you want to reset your device?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>System Reset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Press confirm to erase all content and settings. Press cancel to resume boot.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reboot</source>
-        <translation type="unfinished">Neustart</translation>
-    </message>
-    <message>
-        <source>Confirm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to mount data partition. Partition may be corrupted. Press confirm to erase and reset your device.</source>
+        <source>System reset triggered. Press confirm to erase all content and settings. Press cancel to resume boot.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -728,6 +744,18 @@ This may take up to a minute.</source>
         <source>Select a language</source>
         <translation>Sprache wählen</translation>
     </message>
+    <message>
+        <source>Choose Software to Install</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>openpilot</source>
+        <translation type="unfinished">openpilot</translation>
+    </message>
+    <message>
+        <source>Custom Software</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SetupWidget</name>
@@ -748,7 +776,7 @@ This may take up to a minute.</source>
     <name>Sidebar</name>
     <message>
         <source>CONNECT</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">CONNECT</translation>
     </message>
     <message>
         <source>OFFLINE</source>
