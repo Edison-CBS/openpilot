@@ -23,6 +23,7 @@ common/.gitignore
 common/__init__.py
 common/*.py
 common/*.pyx
+common/mock/*
 
 common/transformations/__init__.py
 common/transformations/camera.py
@@ -59,6 +60,8 @@ system/logmessaged.py
 system/micd.py
 system/version.py
 
+selfdrive/SConscript
+
 selfdrive/athena/__init__.py
 selfdrive/athena/athenad.py
 selfdrive/athena/manage_athenad.py
@@ -87,6 +90,7 @@ selfdrive/car/docs_definitions.py
 selfdrive/car/car_helpers.py
 selfdrive/car/fingerprints.py
 selfdrive/car/interfaces.py
+selfdrive/car/values.py
 selfdrive/car/vin.py
 selfdrive/car/disable_ecu.py
 selfdrive/car/fw_versions.py
@@ -95,7 +99,7 @@ selfdrive/car/ecu_addrs.py
 selfdrive/car/isotp_parallel_query.py
 selfdrive/car/tests/__init__.py
 selfdrive/car/tests/test_car_interfaces.py
-selfdrive/car/torque_data/*.toml
+selfdrive/car/torque_data/*
 
 selfdrive/car/body/*.py
 selfdrive/car/chrysler/*.py
@@ -142,7 +146,6 @@ selfdrive/controls/lib/latcontrol_angle.py
 selfdrive/controls/lib/latcontrol_torque.py
 selfdrive/controls/lib/latcontrol_pid.py
 selfdrive/controls/lib/latcontrol.py
-selfdrive/controls/lib/lateral_planner.py
 selfdrive/controls/lib/longcontrol.py
 selfdrive/controls/lib/longitudinal_planner.py
 selfdrive/controls/lib/pid.py
@@ -154,6 +157,7 @@ selfdrive/controls/lib/lateral_mpc_lib/*
 selfdrive/controls/lib/longitudinal_mpc_lib/*
 
 system/__init__.py
+system/*.py
 
 system/hardware/__init__.py
 system/hardware/base.h
@@ -291,11 +295,8 @@ system/camerad/main.cc
 system/camerad/snapshot/*
 system/camerad/cameras/camera_common.h
 system/camerad/cameras/camera_common.cc
-system/camerad/sensors/ar0231.cc
-system/camerad/sensors/ar0231_registers.h
-system/camerad/sensors/ox03c10.cc
-system/camerad/sensors/ox03c10_registers.h
-system/camerad/sensors/sensor.h
+system/camerad/sensors/*.h
+system/camerad/sensors/*.cc
 
 selfdrive/manager/__init__.py
 selfdrive/manager/build.py
@@ -397,6 +398,7 @@ third_party/acados/acados_template/**
 
 third_party/bootstrap/**
 third_party/qt5/larch64/bin/**
+third_party/maplibre-native-qt/**
 
 scripts/update_now.sh
 scripts/stop_updater.sh

@@ -66,6 +66,26 @@
         <source>Prevent large data uploads when on a metered connection</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Hidden Network</source>
+        <translation>Rede Oculta</translation>
+    </message>
+    <message>
+        <source>CONNECT</source>
+        <translation>CONECTE</translation>
+    </message>
+    <message>
+        <source>Enter SSID</source>
+        <translation>Digite o SSID</translation>
+    </message>
+    <message>
+        <source>Enter password</source>
+        <translation>Insira a senha</translation>
+    </message>
+    <message>
+        <source>for &quot;%1&quot;</source>
+        <translation>para &quot;%1&quot;</translation>
+    </message>
 </context>
 <context>
     <name>AnnotatedCameraWidget</name>
@@ -554,10 +574,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>dashcam</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>openpilot</source>
         <translation type="unfinished"></translation>
     </message>
@@ -587,7 +603,31 @@
     <name>Reset</name>
     <message>
         <source>Reset failed. Reboot to try again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Reset falhou. Reinicie para tentar novamente.</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to reset your device?</source>
+        <translation>Tem certeza que quer resetar seu dispositivo?</translation>
+    </message>
+    <message>
+        <source>System Reset</source>
+        <translation>Resetar Sistema</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancelar</translation>
+    </message>
+    <message>
+        <source>Reboot</source>
+        <translation>Reiniciar</translation>
+    </message>
+    <message>
+        <source>Confirm</source>
+        <translation>Confirmar</translation>
+    </message>
+    <message>
+        <source>Unable to mount data partition. Partition may be corrupted. Press confirm to erase and reset your device.</source>
+        <translation>Não é possível montar a partição de dados. Partição corrompida. Confirme para apagar e redefinir o dispositivo.</translation>
     </message>
     <message>
         <source>Resetting device...
@@ -621,6 +661,10 @@ This may take up to a minute.</source>
     <message>
         <source>Unable to mount data partition. Partition may be corrupted. Press confirm to erase and reset your device.</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>System reset triggered. Press confirm to erase all content and settings. Press cancel to resume boot.</source>
+        <translation>Reinicialização do sistema acionada. Pressione confirmar para apagar todo o conteúdo e configurações. Pressione cancel para retomar a inicialização.</translation>
     </message>
 </context>
 <context>
@@ -727,6 +771,18 @@ This may take up to a minute.</source>
     <message>
         <source>Select a language</source>
         <translation>Selecione o Idioma</translation>
+    </message>
+    <message>
+        <source>Choose Software to Install</source>
+        <translation>Escolha o Software a ser Instalado</translation>
+    </message>
+    <message>
+        <source>openpilot</source>
+        <translation>openpilot</translation>
+    </message>
+    <message>
+        <source>Custom Software</source>
+        <translation>Software Customizado</translation>
     </message>
 </context>
 <context>
