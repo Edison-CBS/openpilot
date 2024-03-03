@@ -118,7 +118,6 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"DoReboot", CLEAR_ON_MANAGER_START},
     {"DoShutdown", CLEAR_ON_MANAGER_START},
     {"DoUninstall", CLEAR_ON_MANAGER_START},
-    {"DrivingPersonalitiesUIWheel", PERSISTENT},
     {"ExperimentalLongitudinalEnabled", PERSISTENT | DEVELOPMENT_ONLY},
     {"ExperimentalMode", PERSISTENT},
     {"ExperimentalModeConfirmed", PERSISTENT},
@@ -209,9 +208,10 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"Version", PERSISTENT},
     {"VisionRadarToggle", PERSISTENT},
     // edison params
-    {"ScreenOffTimer", PERSISTENT},
     {"CruiseSpeedRewrite", PERSISTENT},
     {"DriverCamera", PERSISTENT},
+    {"DrivingPersonalitiesUIWheel", PERSISTENT},
+    {"ScreenOffTimer", PERSISTENT},
 };
 
 } // namespace

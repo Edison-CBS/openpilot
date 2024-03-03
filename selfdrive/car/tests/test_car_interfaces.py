@@ -85,6 +85,7 @@ class TestCarInterfaces(unittest.TestCase):
         self.assertTrue(not math.isnan(tune.pid.kf) and tune.pid.kf > 0)
         self.assertTrue(len(tune.pid.kpV) > 0 and len(tune.pid.kpV) == len(tune.pid.kpBP))
         self.assertTrue(len(tune.pid.kiV) > 0 and len(tune.pid.kiV) == len(tune.pid.kiBP))
+
       elif tune.which() == 'torque':
         self.assertTrue(not math.isnan(tune.torque.kf) and tune.torque.kf > 0)
         self.assertTrue(not math.isnan(tune.torque.friction) and tune.torque.friction > 0)

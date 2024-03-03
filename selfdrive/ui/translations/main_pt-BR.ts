@@ -118,7 +118,7 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
 </context>
 <context>
@@ -316,7 +316,7 @@
     <name>InputDialog</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
     <message numerus="yes">
         <source>Need at least %n character(s)!</source>
@@ -382,7 +382,7 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
 </context>
 <context>
@@ -393,11 +393,11 @@
     </message>
     <message>
         <source>Enter password</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Insira a senha</translation>
     </message>
     <message>
         <source>for &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">para &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Wrong password</source>
@@ -502,7 +502,7 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
 </context>
 <context>
@@ -575,7 +575,7 @@
     </message>
     <message>
         <source>openpilot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">openpilot</translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s) ago</source>
@@ -632,34 +632,6 @@
     <message>
         <source>Resetting device...
 This may take up to a minute.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Are you sure you want to reset your device?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>System Reset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Press confirm to erase all content and settings. Press cancel to resume boot.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reboot</source>
-        <translation type="unfinished">Reiniciar</translation>
-    </message>
-    <message>
-        <source>Confirm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to mount data partition. Partition may be corrupted. Press confirm to erase and reset your device.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -804,7 +776,7 @@ This may take up to a minute.</source>
     <name>Sidebar</name>
     <message>
         <source>CONNECT</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">CONECTE</translation>
     </message>
     <message>
         <source>OFFLINE</source>
