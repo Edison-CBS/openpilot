@@ -4,7 +4,7 @@ from cereal import car
 from openpilot.common.conversions import Conversions as CV
 from openpilot.common.numpy_fast import mean
 from openpilot.common.filter_simple import FirstOrderFilter
-from openpilot.common.params import Params, put_int_nonblocking
+from openpilot.common.params import Params
 from openpilot.common.realtime import DT_CTRL
 from opendbc.can.can_define import CANDefine
 from opendbc.can.parser import CANParser
@@ -187,7 +187,7 @@ class CarState(CarStateBase):
         self.distance_lines = max(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"] - 1, 0)
 
       if self.distance_lines != self.previous_distance_lines:
-        put_int_nonblocking('LongitudinalPersonality', self.distance_lines)
+        self.params.put_int_nonblocking('LongitudinalPersonality', self.distance_lines)
         self.previous_distance_lines = self.distance_lines
 
     return ret

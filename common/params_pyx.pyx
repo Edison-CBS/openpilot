@@ -3,7 +3,6 @@
 from libcpp cimport bool
 from libcpp.string cimport string
 from libcpp.vector cimport vector
-import threading
 
 cdef extern from "common/params.h":
   cpdef enum ParamKeyType:
@@ -23,6 +22,7 @@ cdef extern from "common/params.h":
     int put(string, string) nogil
     void putNonBlocking(string, string) nogil
     void putBoolNonBlocking(string, bool) nogil
+    void putIntNonBlocking(string, int) nogil
     int putBool(string, bool) nogil
     int putInt(string, int) nogil
     bool checkKey(string) nogil
@@ -129,8 +129,10 @@ cdef class Params:
     cdef string key_bytes = ensure_bytes(key)
     return self.p.getParamPath(key_bytes).decode("utf-8")
 
+  def put_int_nonblocking(self, key, int val):
+    cdef string k = self.check_key(key)
+    with nogil:
+      self.p.putIntNonBlocking(k, val)
+
   def all_keys(self):
     return self.p.allKeys()
-
-def put_int_nonblocking(key, int val, d=""):
-  threading.Thread(target=lambda: Params(d).put_int(key, val)).start()
