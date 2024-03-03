@@ -1104,14 +1104,6 @@ This may take up to a minute.</source>
         <translation>行驶画面将在低速时切换到道路朝向的广角摄像头，以更好地显示一些转弯。实验模式标志也将显示在右上角。当设置了导航目的地并且驾驶模型正在使用它作为输入时，地图上的驾驶路径将变为绿色。</translation>
     </message>
     <message>
-        <source>Use LQR on Lat Control for PA</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>When enabled, using LQR on lat control for prius alpha.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Turn Off Display After 30 Seconds</source>
         <translation type="unfinished"></translation>
     </message>

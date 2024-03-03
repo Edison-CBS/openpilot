@@ -65,12 +65,6 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       tr("Upload data from the driver facing camera and help improve the driver monitoring algorithm."),
       "../assets/offroad/icon_monitoring.png",
     },
-    {
-      "LQR",
-      tr("Use LQR on Lat Control for PA"),
-      tr("When enabled, using LQR on lat control for prius alpha."),
-      "../assets/offroad/icon_openpilot.png",
-    },
     // screen off timer
     {
       "ScreenOffTimer",

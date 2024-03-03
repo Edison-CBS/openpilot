@@ -1124,14 +1124,6 @@ This may take up to a minute.</source>
         <translation>تمكين التحكم الطولي من openpilot (ألفا) للسماح بالوضع التجريبي.</translation>
     </message>
     <message>
-        <source>Use LQR on Lat Control for PA</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>When enabled, using LQR on lat control for prius alpha.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Turn Off Display After 30 Seconds</source>
         <translation type="unfinished"></translation>
     </message>
