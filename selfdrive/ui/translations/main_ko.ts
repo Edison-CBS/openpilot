@@ -1104,14 +1104,6 @@ This may take up to a minute.</source>
         <translation>주행 시각화는 저속으로 주행 시 도로를 향한 광각 카메라로 자동 전환되어 일부 곡선 경로를 더 잘 보여줍니다. 실험 모드 로고는 우측 상단에 표시됩니다. 내비게이션 목적지가 설정되고 주행 모델에 입력되면 지도의 주행 경로가 녹색으로 바뀝니다.</translation>
     </message>
     <message>
-        <source>Use LQR on Lat Control for PA</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>When enabled, using LQR on lat control for prius alpha.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Turn Off Display After 30 Seconds</source>
         <translation type="unfinished"></translation>
     </message>

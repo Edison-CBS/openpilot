@@ -110,7 +110,6 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"DisableLogging", CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION},
     {"DisablePowerDown", PERSISTENT},
     {"DisableUpdates", PERSISTENT},
-    {"LQR", PERSISTENT},
     {"DisengageOnAccelerator", PERSISTENT},
     {"DmModelInitialized", CLEAR_ON_ONROAD_TRANSITION},
     {"DongleId", PERSISTENT},
@@ -213,7 +212,6 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"VisionRadarToggle", PERSISTENT},
     {"WheeledBody", PERSISTENT},
     // edison params
-    {"LQR", PERSISTENT},
     {"ScreenOffTimer", PERSISTENT},
     {"CruiseSpeedRewrite", PERSISTENT},
     {"DriverCamera", PERSISTENT},

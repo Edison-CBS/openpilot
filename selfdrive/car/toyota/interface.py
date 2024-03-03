@@ -3,7 +3,6 @@ from openpilot.common.conversions import Conversions as CV
 from openpilot.common.params import Params
 from panda import Panda
 from panda.python import uds
-from openpilot.selfdrive.car.toyota.tunes import LatTunes, set_lat_tune
 from openpilot.selfdrive.car.toyota.values import Ecu, CAR, DBC, ToyotaFlags, CarControllerParams, TSS2_CAR, RADAR_ACC_CAR, NO_DSU_CAR, \
                                         MIN_ACC_SPEED, EPS_SCALE, UNSUPPORTED_DSU_CAR, NO_STOP_TIMER_CAR, ANGLE_CONTROL_CAR
 from openpilot.selfdrive.car import get_safety_config
@@ -69,8 +68,6 @@ class CarInterface(CarInterfaceBase):
       ret.steerRatio = 16.8
       ret.tireStiffnessFactor = 0.5533
       ret.mass = 3340. * CV.LB_TO_KG
-      if Params().get_bool("LQR"):
-        set_lat_tune(ret.lateralTuning, LatTunes.LQR_PV)
 
     elif candidate in (CAR.RAV4, CAR.RAV4H):
       stop_and_go = True if (candidate in CAR.RAV4H) else False

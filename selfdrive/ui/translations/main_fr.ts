@@ -1108,14 +1108,6 @@ Cela peut prendre jusqu&apos;à une minute.</translation>
         <translation>Activer le contrôle longitudinal d&apos;openpilot (en alpha) pour autoriser le mode expérimental.</translation>
     </message>
     <message>
-        <source>Use LQR on Lat Control for PA</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>When enabled, using LQR on lat control for prius alpha.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Turn Off Display After 30 Seconds</source>
         <translation type="unfinished"></translation>
     </message>
