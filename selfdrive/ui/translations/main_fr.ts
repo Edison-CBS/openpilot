@@ -1144,14 +1144,6 @@ Cela peut prendre jusqu&apos;à une minute.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Long: Cruise Speed Override</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Allow openpilot&apos;s set speed to be set below the vehicle&apos;s minimum cruise speed. To use this feature, when the vehicle is travelling below its minimum set speed, pull the cruise control lever down (or click the cruise control SET button) once, openpilot will set its maximum speed to the vehicle&apos;s current speed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Driver Camera On Reverse</source>
         <translation type="unfinished"></translation>
     </message>

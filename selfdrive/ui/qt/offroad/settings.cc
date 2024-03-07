@@ -72,16 +72,6 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       tr("Turn off the device's display after going 'onroad' for 30 seconds."),
       "../assets/offroad/icon_display_off.png",
     },
-    // cruise speed rewrite, stolen from dragonpilot
-    {
-      "CruiseSpeedRewrite",
-      tr("Long: Cruise Speed Override"),
-      tr("Allow openpilot's set speed to be set below the vehicle's minimum cruise speed. "
-         "To use this feature, when the vehicle is travelling below its minimum set speed, "
-         "pull the cruise control lever down (or click the cruise control SET button) once, "
-         "openpilot will set its maximum speed to the vehicle's current speed."),
-      "../assets/offroad/icon_cruise_speed_rewrite.png",
-    },
     // DriverCamera, stolen from FrogPilot
     {
       "DriverCamera",
