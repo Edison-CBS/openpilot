@@ -166,8 +166,6 @@ typedef struct UIScene {
   uint64_t started_frame;
 
   // FrogPilot variables
-  int personality_profile;
-  bool driving_personalities_ui_wheel;
   bool driver_camera;
   bool show_driver_camera;
 

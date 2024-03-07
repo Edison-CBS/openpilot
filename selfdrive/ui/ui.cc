@@ -226,20 +226,10 @@ void ui_update_params(UIState *s) {
   s->scene.is_metric = params.getBool("IsMetric");
   s->scene.map_on_left = params.getBool("NavSettingLeftSide");
   s->scene.screen_off_timer = Params().getBool("ScreenOffTimer");
-  
+
   // FrogPilot variables
   UIScene &scene = s->scene;
-  scene.driving_personalities_ui_wheel = params.getBool("DrivingPersonalitiesUIWheel");
   scene.driver_camera = params.getBool("DriverCamera");
-}
-
-void ui_live_update_params(UIState *s) {
-  static auto params = Params();
-  UIScene &scene = s->scene;
-  // FrogPilot variables that need to be updated live
-  if (scene.driving_personalities_ui_wheel) {
-    scene.personality_profile = params.getInt("LongitudinalPersonality");
-  }
 }
 
 void UIState::updateStatus() {
@@ -262,11 +252,6 @@ void UIState::updateStatus() {
     started_prev = scene.started;
     scene.world_objects_visible = false;
     emit offroadTransition(!scene.started);
-  }
-
-  // Update the live parameters every 5hz
-  if (sm->frame % (UI_FREQ / 5) == 0 || !scene.started) {
-    ui_live_update_params(uiState());
   }
 }
 

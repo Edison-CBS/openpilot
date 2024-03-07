@@ -118,13 +118,6 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
                                              "In relaxed mode openpilot will stay further away from lead cars."),
                                           "../assets/offroad/icon_speed_limit.png",
                                           longi_button_texts);
-
-  driving_personalities_ui_wheel_Toggle = new ParamControl("DrivingPersonalitiesUIWheel",
-                                                  tr("Driving Personalities Via UI / Wheel"),
-                                                  tr("Switch driving personalities using the 'Distance' button on the steering wheel (Toyota/Lexus Only) "
-                                                    "or via the onroad UI for other makes.\n\n1 bar = Aggressive\n2 bars = Standard\n3 bars = Relaxed"),
-                                                  "../assets/offroad/icon_distance.png");
-
   for (auto &[param, title, desc, icon] : toggle_defs) {
     auto toggle = new ParamControl(param, title, desc, icon, this);
 
@@ -137,7 +130,6 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
     // insert longitudinal personality after NDOG toggle
     if (param == "DisengageOnAccelerator") {
       addItem(long_personality_setting);
-      addItem(driving_personalities_ui_wheel_Toggle);
     }
   }
 
@@ -198,13 +190,10 @@ void TogglesPanel::updateToggles() {
       experimental_mode_toggle->setEnabled(true);
       experimental_mode_toggle->setDescription(e2e_description);
       long_personality_setting->setEnabled(true);
-      driving_personalities_ui_wheel_Toggle->setEnabled(true);
-      long_personality_setting->refresh();
     } else {
       // no long for now
       experimental_mode_toggle->setEnabled(false);
       long_personality_setting->setEnabled(false);
-      driving_personalities_ui_wheel_Toggle->setEnabled(false);
       params.remove("ExperimentalMode");
 
       const QString unavailable = tr("Experimental mode is currently unavailable on this car since the car's stock ACC is used for longitudinal control.");

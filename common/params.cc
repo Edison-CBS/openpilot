@@ -211,7 +211,6 @@ std::unordered_map<std::string, uint32_t> keys = {
     // edison params
     {"CruiseSpeedRewrite", PERSISTENT},
     {"DriverCamera", PERSISTENT},
-    {"DrivingPersonalitiesUIWheel", PERSISTENT},
     {"ScreenOffTimer", PERSISTENT},
 };
 

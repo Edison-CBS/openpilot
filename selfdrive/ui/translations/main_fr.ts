@@ -1152,18 +1152,6 @@ Cela peut prendre jusqu&apos;à une minute.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Driving Personalities Via UI / Wheel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Switch driving personalities using the &apos;Distance&apos; button on the steering wheel (Toyota/Lexus Only) or via the onroad UI for other makes.
-
-1 bar = Aggressive
-2 bars = Standard
-3 bars = Relaxed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Driver Camera On Reverse</source>
         <translation type="unfinished"></translation>
     </message>

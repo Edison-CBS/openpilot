@@ -1106,18 +1106,6 @@ This may take up to a minute.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Driving Personalities Via UI / Wheel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Switch driving personalities using the &apos;Distance&apos; button on the steering wheel (Toyota/Lexus Only) or via the onroad UI for other makes.
-
-1 bar = Aggressive
-2 bars = Standard
-3 bars = Relaxed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>openpilot defaults to driving in &lt;b&gt;chill mode&lt;/b&gt;. Experimental mode enables &lt;b&gt;alpha-level features&lt;/b&gt; that aren&apos;t ready for chill mode. Experimental features are listed below:</source>
         <translation type="unfinished"></translation>
     </message>
