@@ -41,6 +41,12 @@ class CarState(CarStateBase):
     self.accurate_steer_angle_seen = False
     self.angle_offset = FirstOrderFilter(None, 60.0, DT_CTRL, initialized=False)
 
+    self.prev_distance_button = 0
+    self.distance_button = 0
+
+    self.pcm_follow_distance = 0
+    self.pcm_follow_distance_values = can_define.dv['PCM_CRUISE_2']['PCM_FOLLOW_DISTANCE']
+
     self.low_speed_lockout = False
     self.acc_type = 1
     self.lkas_hud = {}
@@ -49,7 +55,6 @@ class CarState(CarStateBase):
     # FrogPilot variables
     self.params = Params()
     self.driving_personalities_via_wheel = self.params.get_bool("DrivingPersonalitiesUIWheel")
-    self.distance_btn = 0
     self.distance_lines = 0
     self.previous_distance_lines = 0
 
@@ -177,14 +182,19 @@ class CarState(CarStateBase):
       # KRKeegan - Add support for toyota distance button
       # order must be: RADAR_ACC_CAR --> TSS2_CAR --> smartDsu
       # cp_acc dynamic according to car carFingerprint
-      if self.CP.carFingerprint in (TSS2_CAR | RADAR_ACC_CAR):
-        if not (self.CP.flags & ToyotaFlags.SMART_DSU.value):
-          self.distance_btn = 1 if cp_acc.vl["ACC_CONTROL"]["DISTANCE"] == 1 else 0
+      if self.CP.carFingerprint not in UNSUPPORTED_DSU_CAR:
+        self.pcm_follow_distance = cp.vl["PCM_CRUISE_2"]["PCM_FOLLOW_DISTANCE"]
+
+      if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR) or (self.CP.flags & ToyotaFlags.SMART_DSU and not self.CP.flags & ToyotaFlags.RADAR_CAN_FILTER):
+        # distance button is wired to the ACC module (camera or radar)
+        self.prev_distance_button = self.distance_button
+        if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
+          self.distance_button = cp_acc.vl["ACC_CONTROL"]["DISTANCE"]
           # Need to subtract by 1 to comply with the personality profiles of "0", "1", and "2"
           self.distance_lines = max(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"] - 1, 0)
-      elif bool(self.CP.flags & ToyotaFlags.SMART_DSU):
-        self.distance_btn = 1 if cp_acc.vl["SDSU"]["FD_BUTTON"] == 1 else 0
-        self.distance_lines = max(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"] - 1, 0)
+        else:
+          self.distance_button = cp.vl["SDSU"]["FD_BUTTON"]
+          self.distance_lines = max(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"] - 1, 0)
 
       if self.distance_lines != self.previous_distance_lines:
         self.params.put_int_nonblocking('LongitudinalPersonality', self.distance_lines)
@@ -246,9 +256,10 @@ class CarState(CarStateBase):
         ("PRE_COLLISION", 33),
       ]
 
-#    try to fix duplicate message check
-#    if CP.carFingerprint in (TSS2_CAR | RADAR_ACC_CAR | NO_STOP_TIMER_CAR):
-#      messages.append(("PCM_CRUISE_SM", 0))
+    if CP.flags & ToyotaFlags.SMART_DSU and not CP.flags & ToyotaFlags.RADAR_CAN_FILTER:
+      messages += [
+        ("SDSU", 100),
+      ]
 
     return CANParser(DBC[CP.carFingerprint]["pt"], messages, 0)
 
