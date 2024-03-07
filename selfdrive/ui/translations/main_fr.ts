@@ -1135,22 +1135,6 @@ Cela peut prendre jusqu&apos;à une minute.</translation>
         <source>Enable the openpilot longitudinal control (alpha) toggle to allow Experimental mode.</source>
         <translation>Activer le contrôle longitudinal d&apos;openpilot (en alpha) pour autoriser le mode expérimental.</translation>
     </message>
-    <message>
-        <source>Turn Off Display After 30 Seconds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Turn off the device&apos;s display after going &apos;onroad&apos; for 30 seconds.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Driver Camera On Reverse</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Displays the driver camera when in reverse.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>Updater</name>

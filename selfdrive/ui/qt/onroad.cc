@@ -101,7 +101,6 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
     map->setVisible(show_map && !map->isVisible());
   }
 #endif
-
   // propagation event to parent(HomeWindow)
   QWidget::mousePressEvent(e);
 }
@@ -156,9 +155,7 @@ void OnroadAlerts::updateAlert(const Alert &a) {
 }
 
 void OnroadAlerts::paintEvent(QPaintEvent *event) {
-  const UIScene &scene = uiState()->scene;
-
-  if (alert.size == cereal::ControlsState::AlertSize::NONE || scene.show_driver_camera) {
+  if (alert.size == cereal::ControlsState::AlertSize::NONE) {
     return;
   }
   static std::map<cereal::ControlsState::AlertSize, const int> alert_heights = {
@@ -215,7 +212,7 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
 }
 
 // ExperimentalButton
-ExperimentalButton::ExperimentalButton(QWidget *parent) : experimental_mode(false), engageable(false), QPushButton(parent), scene(uiState()->scene) {
+ExperimentalButton::ExperimentalButton(QWidget *parent) : experimental_mode(false), engageable(false), QPushButton(parent) {
   setFixedSize(btn_size, btn_size);
 
   engage_img = loadPixmap("../assets/img_chffr_wheel.png", {img_size, img_size});
@@ -244,9 +241,7 @@ void ExperimentalButton::updateState(const UIState &s) {
 void ExperimentalButton::paintEvent(QPaintEvent *event) {
   QPainter p(this);
   QPixmap img = experimental_mode ? experimental_img : engage_img;
-  if (!scene.show_driver_camera) {
-    drawIcon(p, QPoint(btn_size / 2, btn_size / 2), img, QColor(0, 0, 0, 166), (isDown() || !engageable) ? 0.6 : 1.0);
-  }
+  drawIcon(p, QPoint(btn_size / 2, btn_size / 2), img, QColor(0, 0, 0, 166), (isDown() || !engageable) ? 0.6 : 1.0);
 }
 
 
@@ -267,7 +262,7 @@ void MapSettingsButton::paintEvent(QPaintEvent *event) {
 
 
 // Window that shows camera view and variety of info drawn on top
-AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* parent) : fps_filter(UI_FREQ, 3, 1. / UI_FREQ), CameraWidget("camerad", type, true, parent), scene(uiState()->scene) {
+AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* parent) : fps_filter(UI_FREQ, 3, 1. / UI_FREQ), CameraWidget("camerad", type, true, parent) {
   pm = std::make_unique<PubMaster, const std::initializer_list<const char *>>({"uiDebug"});
 
   main_layout = new QVBoxLayout(this);
@@ -315,7 +310,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   has_eu_speed_limit = (nav_alive && speed_limit_sign == cereal::NavInstruction::SpeedLimitSign::VIENNA);
   is_metric = s.scene.is_metric;
   speedUnit =  s.scene.is_metric ? tr("km/h") : tr("mph");
-  hideBottomIcons = (cs.getAlertSize() != cereal::ControlsState::AlertSize::NONE || showDriverCamera);
+  hideBottomIcons = (cs.getAlertSize() != cereal::ControlsState::AlertSize::NONE);
   status = s.status;
 
   // update engageability/experimental mode button
@@ -327,9 +322,6 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   rightHandDM = dm_state.getIsRHD();
   // DM icon transition
   dm_fade_state = std::clamp(dm_fade_state+0.2*(0.5-dmActive), 0.0, 1.0);
-
-  // FrogPilot variables
-  showDriverCamera = scene.show_driver_camera;
 
   // hide map settings button for alerts and flip for right hand DM
   if (map_settings_btn->isEnabled()) {
@@ -645,7 +637,7 @@ void AnnotatedCameraWidget::paintGL() {
       // for replay of old routes, never go to widecam
       wide_cam_requested = wide_cam_requested && s->scene.calibration_wide_valid;
     }
-    CameraWidget::setStreamType(showDriverCamera ? VISION_STREAM_DRIVER : wide_cam_requested ? VISION_STREAM_WIDE_ROAD : VISION_STREAM_ROAD);
+    CameraWidget::setStreamType(wide_cam_requested ? VISION_STREAM_WIDE_ROAD : VISION_STREAM_ROAD);
 
     s->scene.wide_cam = CameraWidget::getStreamType() == VISION_STREAM_WIDE_ROAD;
     if (s->scene.calibration_valid) {
@@ -662,33 +654,31 @@ void AnnotatedCameraWidget::paintGL() {
   painter.setRenderHint(QPainter::Antialiasing);
   painter.setPen(Qt::NoPen);
 
-  if (!showDriverCamera) {
-    if (s->scene.world_objects_visible) {
-      update_model(s, model, sm["uiPlan"].getUiPlan());
-      drawLaneLines(painter, s);
+  if (s->scene.world_objects_visible) {
+    update_model(s, model, sm["uiPlan"].getUiPlan());
+    drawLaneLines(painter, s);
 
-      if (s->scene.longitudinal_control && sm.rcv_frame("radarState") > s->scene.started_frame) {
-        auto radar_state = sm["radarState"].getRadarState();
-        update_leads(s, radar_state, model.getPosition());
-        auto lead_one = radar_state.getLeadOne();
-        auto lead_two = radar_state.getLeadTwo();
-        if (lead_one.getStatus()) {
-          drawLead(painter, lead_one, s->scene.lead_vertices[0]);
-        }
-        if (lead_two.getStatus() && (std::abs(lead_one.getDRel() - lead_two.getDRel()) > 3.0)) {
-          drawLead(painter, lead_two, s->scene.lead_vertices[1]);
-        }
+    if (s->scene.longitudinal_control && sm.rcv_frame("radarState") > s->scene.started_frame) {
+      auto radar_state = sm["radarState"].getRadarState();
+      update_leads(s, radar_state, model.getPosition());
+      auto lead_one = radar_state.getLeadOne();
+      auto lead_two = radar_state.getLeadTwo();
+      if (lead_one.getStatus()) {
+        drawLead(painter, lead_one, s->scene.lead_vertices[0]);
+      }
+      if (lead_two.getStatus() && (std::abs(lead_one.getDRel() - lead_two.getDRel()) > 3.0)) {
+        drawLead(painter, lead_two, s->scene.lead_vertices[1]);
       }
     }
-
-    // DMoji
-    if (!hideBottomIcons && (sm.rcv_frame("driverStateV2") > s->scene.started_frame)) {
-      update_dmonitoring(s, sm["driverStateV2"].getDriverStateV2(), dm_fade_state, rightHandDM);
-      drawDriverState(painter, s);
-    }
-
-    drawHud(painter);
   }
+
+  // DMoji
+  if (!hideBottomIcons && (sm.rcv_frame("driverStateV2") > s->scene.started_frame)) {
+    update_dmonitoring(s, sm["driverStateV2"].getDriverStateV2(), dm_fade_state, rightHandDM);
+    drawDriverState(painter, s);
+  }
+
+  drawHud(painter);
 
   double cur_draw_t = millis_since_boot();
   double dt = cur_draw_t - prev_draw_t;

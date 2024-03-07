@@ -201,12 +201,6 @@ static void update_state(UIState *s) {
   if (sm.updated("carParams")) {
     scene.longitudinal_control = sm["carParams"].getCarParams().getOpenpilotLongitudinalControl();
   }
-  if (sm.updated("carState")) {
-    const auto carState = sm["carState"].getCarState();
-    if (scene.driver_camera) {
-      scene.show_driver_camera = carState.getGearShifter() == cereal::CarState::GearShifter::REVERSE;
-    }
-  }
   if (sm.updated("wideRoadCameraState")) {
     auto cam_state = sm["wideRoadCameraState"].getWideRoadCameraState();
     float scale = (cam_state.getSensor() == cereal::FrameData::ImageSensor::AR0231) ? 6.0f : 1.0f;
@@ -225,11 +219,6 @@ void ui_update_params(UIState *s) {
   auto params = Params();
   s->scene.is_metric = params.getBool("IsMetric");
   s->scene.map_on_left = params.getBool("NavSettingLeftSide");
-  s->scene.screen_off_timer = Params().getBool("ScreenOffTimer");
-
-  // FrogPilot variables
-  UIScene &scene = s->scene;
-  scene.driver_camera = params.getBool("DriverCamera");
 }
 
 void UIState::updateStatus() {

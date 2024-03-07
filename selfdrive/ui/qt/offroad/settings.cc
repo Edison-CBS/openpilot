@@ -65,20 +65,6 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       tr("Upload data from the driver facing camera and help improve the driver monitoring algorithm."),
       "../assets/offroad/icon_monitoring.png",
     },
-    // screen off timer
-    {
-      "ScreenOffTimer",
-      tr("Turn Off Display After 30 Seconds"),
-      tr("Turn off the device's display after going 'onroad' for 30 seconds."),
-      "../assets/offroad/icon_display_off.png",
-    },
-    // DriverCamera, stolen from FrogPilot
-    {
-      "DriverCamera",
-      tr("Driver Camera On Reverse"),
-      tr("Displays the driver camera when in reverse."),
-      "../assets/img_driver_face_static.png",
-    },
     {
       "IsMetric",
       tr("Use Metric System"),

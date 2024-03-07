@@ -43,10 +43,6 @@ private:
   void changeMode();
 
   Params params;
-
-  // FrogPilot variables
-  const UIScene &scene;
-
   QPixmap engage_img;
   QPixmap experimental_img;
   bool experimental_mode;
@@ -100,9 +96,6 @@ private:
 
   int skip_frame_count = 0;
   bool wide_cam_requested = false;
-
-  // FrogPilot variables
-  bool showDriverCamera;
 
 protected:
   void paintGL() override;

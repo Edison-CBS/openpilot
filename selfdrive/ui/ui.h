@@ -131,15 +131,11 @@ static std::map<cereal::ControlsState::AlertStatus, QColor> alert_colors = {
 
 typedef struct UIScene {
   bool calibration_valid = false;
-  bool screen_off_timer;
-
   bool calibration_wide_valid  = false;
   bool wide_cam = true;
   mat3 view_from_calib = DEFAULT_CALIBRATION;
   mat3 view_from_wide_calib = DEFAULT_CALIBRATION;
-  bool touched2 = false;
   cereal::PandaState::PandaType pandaType;
-  cereal::ControlsState::Reader controls_state;
 
   // modelV2
   float lane_line_probs[4];
@@ -164,11 +160,6 @@ typedef struct UIScene {
   bool started, ignition, is_metric, map_on_left, longitudinal_control;
   bool world_objects_visible = false;
   uint64_t started_frame;
-
-  // FrogPilot variables
-  bool driver_camera;
-  bool show_driver_camera;
-
 } UIScene;
 
 class UIState : public QObject {
@@ -233,8 +224,6 @@ private:
   int last_brightness = 0;
   FirstOrderFilter brightness_filter;
   QFuture<void> brightness_future;
-
-  int sleep_time = -1;
 
   void updateBrightness(const UIState &s);
   void updateWakefulness(const UIState &s);
