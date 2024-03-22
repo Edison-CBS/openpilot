@@ -293,6 +293,18 @@
         <source>Review</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Pair your device with comma connect (connect.comma.ai) and claim your comma prime offer.</source>
+        <translation>Pareie seu dispositivo com comma connect (connect.comma.ai) e reivindique sua oferta de comma prime.</translation>
+    </message>
+    <message>
+        <source>Pair Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pair</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DriverViewWindow</name>
@@ -551,19 +563,19 @@
     <name>QObject</name>
     <message>
         <source>km</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">km</translation>
     </message>
     <message>
         <source>m</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">m</translation>
     </message>
     <message>
         <source>mi</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">milha</translation>
     </message>
     <message>
         <source>ft</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">pés</translation>
     </message>
     <message>
         <source>Reboot</source>
@@ -597,6 +609,10 @@
             <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
+    </message>
+    <message>
+        <source>now</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -765,7 +781,7 @@ This may take up to a minute.</source>
     </message>
     <message>
         <source>Pair your device with comma connect (connect.comma.ai) and claim your comma prime offer.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pareie seu dispositivo com comma connect (connect.comma.ai) e reivindique sua oferta de comma prime.</translation>
     </message>
     <message>
         <source>Pair device</source>
