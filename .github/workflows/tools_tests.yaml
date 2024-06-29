@@ -78,7 +78,6 @@ jobs:
   devcontainer:
     name: devcontainer
     runs-on: ubuntu-latest
-    if: github.repository == 'commaai/openpilot'
     steps:
     - uses: actions/checkout@v4
       with:
