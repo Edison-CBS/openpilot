@@ -69,6 +69,12 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       tr("Display speed in km/h instead of mph."),
       "../assets/offroad/icon_metric.png",
     },
+    {
+      "ToyotaDoors",
+      tr("Automatically Lock/Unlock Doors"),
+      tr("Automatically lock the doors when in drive and unlock when in park."),
+      "",
+    },
   };
 
 

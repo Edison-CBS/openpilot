@@ -1062,6 +1062,14 @@ Cela peut prendre jusqu&apos;à une minute.</translation>
         <source>Enable driver monitoring even when openpilot is not engaged.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Automatically Lock/Unlock Doors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically lock the doors when in drive and unlock when in park.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Updater</name>
