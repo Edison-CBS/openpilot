@@ -1,8 +1,8 @@
 from cereal import car
-from openpilot.common.numpy_fast import clip, interp
 from openpilot.common.params import Params
 from openpilot.selfdrive.car import DT_CTRL
 from openpilot.selfdrive.car import apply_meas_steer_torque_limits, apply_std_steer_angle_limits, common_fault_avoidance, make_can_msg, make_tester_present_msg
+from openpilot.selfdrive.car.helpers import clip, interp
 from openpilot.selfdrive.car.interfaces import CarControllerBase
 from openpilot.selfdrive.car.toyota import toyotacan
 from openpilot.selfdrive.car.toyota.values import CAR, STATIC_DSU_MSGS, NO_STOP_TIMER_CAR, TSS2_CAR, \
@@ -43,8 +43,8 @@ COMPENSATORY_CALCULATION_THRESHOLD_V = [-0.3, -0.25, 0.]  # m/s^2
 COMPENSATORY_CALCULATION_THRESHOLD_BP = [0., 11., 23.]  # m/s
 
 class CarController(CarControllerBase):
-  def __init__(self, dbc_name, CP, VM):
-    super().__init__(dbc_name, CP, VM)
+  def __init__(self, dbc_name, CP):
+    super().__init__(dbc_name, CP)
     self.params = CarControllerParams(self.CP)
     self.last_steer = 0
     self.last_angle = 0
