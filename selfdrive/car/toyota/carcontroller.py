@@ -131,7 +131,7 @@ class CarController(CarControllerBase):
       pcm_accel_cmd = 0.
 
     # *** standstill logic ***
-    # mimic stock behaviour, set standstill_req to False only when openpilot wants to resume
+    # mimic stock behavior, set standstill_req to False only when openpilot wants to resume
     if not CC.cruiseControl.resume:
         self.resume_off_frames += 1  # frame counter for hysteresis
         # add a 1.5 second hysteresis to when CC.cruiseControl.resume turns off in order to prevent
