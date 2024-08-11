@@ -1062,14 +1062,6 @@ Esto puede tardar un minuto.</translation>
         <source>Enable the openpilot longitudinal control (alpha) toggle to allow Experimental mode.</source>
         <translation>Activar el control longitudinal (fase experimental) para permitir el modo Experimental.</translation>
     </message>
-    <message>
-        <source>Automatically Lock/Unlock Doors</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Automatically lock the doors when in drive and unlock when in park.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>Updater</name>

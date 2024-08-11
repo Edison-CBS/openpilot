@@ -1,7 +1,6 @@
 from cereal import car
-from openpilot.common.params import Params
 from openpilot.selfdrive.car import DT_CTRL
-from openpilot.selfdrive.car import apply_meas_steer_torque_limits, apply_std_steer_angle_limits, common_fault_avoidance, make_tester_present_msg, make_can_msg
+from openpilot.selfdrive.car import apply_meas_steer_torque_limits, apply_std_steer_angle_limits, common_fault_avoidance, make_tester_present_msg
 from openpilot.selfdrive.car.can_definitions import CanData
 from openpilot.selfdrive.car.helpers import clip, interp
 from openpilot.selfdrive.car.interfaces import CarControllerBase
@@ -28,12 +27,6 @@ MAX_USER_TORQUE = 500
 MAX_LTA_ANGLE = 94.9461  # deg
 MAX_LTA_DRIVER_TORQUE_ALLOWANCE = 150  # slightly above steering pressed allows some resistance when changing lanes
 
-# Lock / unlock door commands - Credit goes to AlexandreSato!
-LOCK_CMD = b"\x40\x05\x30\x11\x00\x80\x00\x00"
-UNLOCK_CMD = b"\x40\x05\x30\x11\x00\x40\x00\x00"
-
-PARK = car.CarState.GearShifter.park
-
 # Time values for hysteresis
 RESUME_HYSTERESIS_TIME = 1.5  # seconds
 
@@ -59,8 +52,6 @@ class CarController(CarControllerBase):
     self.packer = CANPacker(dbc_name)
     self.gas = 0
     self.accel = 0
-
-    self.doors_locked = False
 
   def update(self, CC, CS, now_nanos):
     actuators = CC.actuators
@@ -218,16 +209,6 @@ class CarController(CarControllerBase):
     new_actuators.steeringAngleDeg = self.last_angle
     new_actuators.accel = self.accel
     new_actuators.gas = self.gas
-
-    # Lock doors when in drive / unlock doors when in park
-    if not self.doors_locked and CS.out.gearShifter != PARK:
-      if Params().get_bool("ToyotaDoors") and self.CP.carName == "toyota":
-        can_sends.append(make_can_msg(0x750, LOCK_CMD, 0))
-        self.doors_locked = True
-    elif self.doors_locked and CS.out.gearShifter == PARK:
-      if Params().get_bool("ToyotaDoors") and self.CP.carName == "toyota":
-        can_sends.append(make_can_msg(0x750, UNLOCK_CMD, 0))
-        self.doors_locked = False
 
     self.frame += 1
     return new_actuators, can_sends
