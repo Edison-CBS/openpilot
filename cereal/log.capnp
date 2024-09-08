@@ -611,7 +611,6 @@ struct RadarState @0x9a185389d6fdd05f {
 
   leadOne @3 :LeadData;
   leadTwo @4 :LeadData;
-  cumLagMs @5 :Float32;
 
   struct LeadData {
     dRel @0 :Float32;
@@ -641,6 +640,7 @@ struct RadarState @0x9a185389d6fdd05f {
   calCycleDEPRECATED @8 :Int32;
   calPercDEPRECATED @9 :Int8;
   canMonoTimesDEPRECATED @10 :List(UInt64);
+  cumLagMsDEPRECATED @5 :Float32;
 }
 
 struct LiveCalibrationData {
@@ -671,7 +671,7 @@ struct LiveCalibrationData {
   }
 }
 
-struct LiveTracks {
+struct LiveTracksDEPRECATED {
   trackId @0 :Int32;
   dRel @1 :Float32;
   yRel @2 :Float32;
@@ -698,6 +698,7 @@ struct SelfdriveState {
   alertSize @6 :AlertSize;
   alertType @7 :Text;
   alertSound @8 :Car.CarControl.HUDControl.AudibleAlert;
+  alertHudVisual @12 :Car.CarControl.HUDControl.VisualAlert;
 
   # configurable driving settings
   experimentalMode @10 :Bool;
@@ -726,36 +727,18 @@ struct SelfdriveState {
 }
 
 struct ControlsState @0x97ff69c53601abf1 {
-  cumLagMs @15 :Float32;
-  startMonoTime @48 :UInt64;
   longitudinalPlanMonoTime @28 :UInt64;
   lateralPlanMonoTime @50 :UInt64;
 
   longControlState @30 :Car.CarControl.Actuators.LongControlState;
   vTargetLead @3 :Float32;
-  vCruise @22 :Float32;  # actual set speed
-  vCruiseCluster @63 :Float32;  # set speed to display in the UI
   upAccelCmd @4 :Float32;
   uiAccelCmd @5 :Float32;
   ufAccelCmd @33 :Float32;
   aTarget @35 :Float32;
   curvature @37 :Float32;  # path curvature from vehicle model
   desiredCurvature @61 :Float32;  # lag adjusted curvatures used by lateral controllers
-
-  # TODO: remove these, they're now in selfdriveState
-  alertText1 @24 :Text;
-  alertText2 @25 :Text;
-  alertStatus @38 :SelfdriveState.AlertStatus;
-  alertSize @39 :SelfdriveState.AlertSize;
-  alertType @44 :Text;
-  alertSound @56 :Car.CarControl.HUDControl.AudibleAlert;
-  engageable @41 :Bool;  # can OP be engaged?
   forceDecel @51 :Bool;
-  state @31 :SelfdriveState.OpenpilotState;
-  enabled @19 :Bool;
-  active @36 :Bool;
-  experimentalMode @64 :Bool;
-  personality @66 :LongitudinalPersonality;
 
   lateralControlState :union {
     indiState @52 :LateralINDIState;
@@ -882,6 +865,22 @@ struct ControlsState @0x97ff69c53601abf1 {
   canErrorCounterDEPRECATED @57 :UInt32;
   vPidDEPRECATED @2 :Float32;
   alertBlinkingRateDEPRECATED @42 :Float32;
+  alertText1DEPRECATED @24 :Text;
+  alertText2DEPRECATED @25 :Text;
+  alertStatusDEPRECATED @38 :SelfdriveState.AlertStatus;
+  alertSizeDEPRECATED @39 :SelfdriveState.AlertSize;
+  alertTypeDEPRECATED @44 :Text;
+  alertSound2DEPRECATED @56 :Car.CarControl.HUDControl.AudibleAlert;
+  engageableDEPRECATED @41 :Bool;  # can OP be engaged?
+  stateDEPRECATED @31 :SelfdriveState.OpenpilotState;
+  enabledDEPRECATED @19 :Bool;
+  activeDEPRECATED @36 :Bool;
+  experimentalModeDEPRECATED @64 :Bool;
+  personalityDEPRECATED @66 :LongitudinalPersonality;
+  vCruiseDEPRECATED @22 :Float32;  # actual set speed
+  vCruiseClusterDEPRECATED @63 :Float32;  # set speed to display in the UI
+  startMonoTimeDEPRECATED @48 :UInt64;
+  cumLagMsDEPRECATED @15 :Float32;
 }
 
 struct DrivingModelData {
@@ -1098,6 +1097,14 @@ struct AndroidLogEntry {
   message @6 :Text;
 }
 
+struct DriverAssistance {
+  # Lane Departure Warnings
+  leftLaneDeparture @0 :Bool;
+  rightLaneDeparture @1 :Bool;
+
+  # FCW, AEB, etc. will go here
+}
+
 struct LongitudinalPlan @0xe00b5b3eba12876c {
   modelMonoTime @9 :UInt64;
   hasLead @7 :Bool;
@@ -1283,7 +1290,7 @@ struct LivePose {
   posenetOK @5 :Bool = false;
   sensorsOK @6 :Bool = false;
 
-  filterState @7 :FilterState;
+  debugFilterState @7 :FilterState;
 
   struct XYZMeasurement {
     x @0 :Float32;
@@ -1299,6 +1306,14 @@ struct LivePose {
     value @0 : List(Float64);
     std @1 : List(Float64);
     valid @2 : Bool;
+
+    observations @3 :List(Observation);
+
+    struct Observation {
+      kind @0 :Int32;
+      value @1 :List(Float32);
+      error @2 :List(Float32);
+    }
   }
 }
 
@@ -2329,13 +2344,14 @@ struct Event {
     pandaStates @81 :List(PandaState);
     peripheralState @80 :PeripheralState;
     radarState @13 :RadarState;
-    liveTracks @16 :List(LiveTracks);
+    liveTracks @131 :Car.RadarData;
     sendcan @17 :List(CanData);
     liveCalibration @19 :LiveCalibrationData;
     carState @22 :Car.CarState;
     carControl @23 :Car.CarControl;
     carOutput @127 :Car.CarOutput;
     longitudinalPlan @24 :LongitudinalPlan;
+    driverAssistance @132 :DriverAssistance;
     ubloxGnss @34 :UbloxGnss;
     ubloxRaw @39 :Data;
     qcomGnss @31 :QcomGnss;
@@ -2459,5 +2475,6 @@ struct Event {
     navModelDEPRECATED @104 :NavModelData;
     uiPlanDEPRECATED @106 :UiPlan;
     liveLocationKalmanDEPRECATED @72 :LiveLocationKalman;
+    liveTracksDEPRECATED @16 :List(LiveTracksDEPRECATED);
   }
 }

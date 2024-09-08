@@ -10,8 +10,20 @@ ROOT = HERE + "/.."
 # - minimizing release download size
 # - keeping the diff readable
 blacklist = [
+  "panda/drivers/",
   "panda/examples/",
+  "panda/tests/safety/",
+
+  "opendbc_repo/dbc/.*.dbc$",
   "opendbc_repo/dbc/generator/",
+
+  "cereal/.*test.*",
+  "^common/tests/",
+
+  # particularly large text files
+  "uv.lock",
+  "third_party/catch2",
+  "selfdrive/car/tests/test_models.*",
 
   "^tools/",
   "^tinygrad_repo/",
@@ -108,6 +120,10 @@ whitelist = [
   "opendbc_repo/dbc/vw_mqb_2010.dbc",
 ]
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 if __name__ == "__main__":
   for f in Path(ROOT).rglob("**/*"):
     if not (f.is_file() or f.is_symlink()):

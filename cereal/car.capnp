@@ -87,7 +87,6 @@ struct OnroadEvent @0x9b1657f34caf3ad3 {
     startupNoCar @76;
     startupNoControl @77;
     startupMaster @78;
-    startupNoFw @104;
     fcw @79;
     steerSaturated @80;
     belowEngageSpeed @84;
@@ -100,16 +99,12 @@ struct OnroadEvent @0x9b1657f34caf3ad3 {
     cameraFrameRate @110;
     processNotRunning @95;
     dashcamMode @96;
-    controlsInitializing @98;
+    selfdriveInitializing @98;
     usbError @99;
-    roadCameraError @100;
-    driverCameraError @101;
-    wideRoadCameraError @102;
-    highCpuUsage @105;
     cruiseMismatch @106;
     lkasDisabled @107;
     canBusMissing @111;
-    controlsdLagging @112;
+    selfdrivedLagging @112;
     resumeBlocked @113;
     steerTimeLimit @115;
     vehicleSensorsInvalid @116;
@@ -147,6 +142,11 @@ struct OnroadEvent @0x9b1657f34caf3ad3 {
     brakeUnavailableDEPRECATED @2;
     plannerErrorDEPRECATED @32;
     gpsMalfunctionDEPRECATED @94;
+    roadCameraErrorDEPRECATED @100;
+    driverCameraErrorDEPRECATED @101;
+    wideRoadCameraErrorDEPRECATED @102;
+    highCpuUsageDEPRECATED @105;
+    startupNoFwDEPRECATED @104;
   }
 }
 
@@ -162,10 +162,13 @@ struct CarState {
   canErrorCounter @48 :UInt32;
 
   # car speed
-  vEgo @1 :Float32;          # best estimate of speed
-  aEgo @16 :Float32;         # best estimate of acceleration
-  vEgoRaw @17 :Float32;      # unfiltered speed from CAN sensors
-  vEgoCluster @44 :Float32;  # best estimate of speed shown on car's instrument cluster, used for UI
+  vEgo @1 :Float32;            # best estimate of speed
+  aEgo @16 :Float32;           # best estimate of aCAN cceleration
+  vEgoRaw @17 :Float32;        # unfiltered speed from wheel speed sensors
+  vEgoCluster @44 :Float32;    # best estimate of speed shown on car's instrument cluster, used for UI
+
+  vCruise @53 :Float32;        # actual set speed
+  vCruiseCluster @54 :Float32; # set speed to display in the UI
 
   yawRate @22 :Float32;     # best estimate of yaw rate
   standstill @18 :Bool;
@@ -505,6 +508,7 @@ struct CarParams {
   carFw @44 :List(CarFw);
 
   radarTimeStep @45: Float32 = 0.05;  # time delta between radar updates, 20Hz is very standard
+  radarDelay @74 :Float32;
   fingerprintSource @49: FingerprintSource;
   networkLocation @50 :NetworkLocation;  # Where Panda/C2 is integrated into the car's CAN network
 
