@@ -14,16 +14,10 @@ blacklist = [
   "panda/examples/",
   "panda/tests/safety/",
 
-  "opendbc_repo/dbc/.*.dbc$",
   "opendbc_repo/dbc/generator/",
-
-  "cereal/.*test.*",
-  "^common/tests/",
 
   # particularly large text files
   "uv.lock",
-  "third_party/catch2",
-  "selfdrive/car/tests/test_models.*",
 
   "^tools/",
   "^tinygrad_repo/",
