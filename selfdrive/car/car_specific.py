@@ -4,7 +4,7 @@ from opendbc.car import DT_CTRL, structs
 from opendbc.car.interfaces import MAX_CTRL_SPEED, CarStateBase, CarControllerBase
 from opendbc.car.volkswagen.values import CarControllerParams as VWCarControllerParams
 from opendbc.car.hyundai.interface import ENABLE_BUTTONS as HYUNDAI_ENABLE_BUTTONS
-from opendbc.car.toyota.carcontroller import CarController as ToyotaCarController
+
 from openpilot.selfdrive.selfdrived.events import Events
 
 ButtonType = structs.CarState.ButtonEvent.Type
@@ -97,7 +97,7 @@ class CarSpecificEvents:
       events = self.create_common_events(CS.out, CS_prev)
 
       if self.CP.openpilotLongitudinalControl:
-        if CS.out.cruiseState.standstill and not CS.out.brakePressed and not ToyotaCarController.standstill_req:
+        if CS.out.cruiseState.standstill and not CS.out.brakePressed:
           events.add(EventName.resumeRequired)
         if CS.low_speed_lockout:  # type: ignore[attr-defined]
           events.add(EventName.lowSpeedLockout)
