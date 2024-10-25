@@ -81,7 +81,7 @@ def deviceStage(String stageName, String deviceType, List extra_env, def steps) 
 
     def extra = extra_env.collect { "export ${it}" }.join('\n');
     def branch = env.BRANCH_NAME ?: 'master';
-    def gitDiff = sh returnStdout: true, script: 'curl -s -H "Authorization: Bearer ${GITHUB_COMMENTS_TOKEN}" https://api.github.com/repos/commaai/openpilot/compare/master...${GIT_BRANCH} | jq .files[].filename', label: 'Getting changes'
+    def gitDiff = sh returnStdout: true, script: 'curl -s -H "Authorization: Bearer ${GITHUB_COMMENTS_TOKEN}" https://api.github.com/repos/commaai/openpilot/compare/master...${GIT_BRANCH} | jq .files[].filename || echo "/"', label: 'Getting changes'
 
     lock(resource: "", label: deviceType, inversePrecedence: true, variable: 'device_ip', quantity: 1, resourceSelectStrategy: 'random') {
       docker.image('ghcr.io/commaai/alpine-ssh').inside('--user=root') {
@@ -172,7 +172,7 @@ node {
     parallel (
       // tici tests
       'onroad tests': {
-        deviceStage("onroad", "tici-needs-can", [], [
+        deviceStage("onroad", "tici-needs-can", ["UNSAFE=1"], [
           // TODO: ideally, this test runs in master-ci, but it takes 5+m to build it
           //["build master-ci", "cd $SOURCE_DIR/release && TARGET_DIR=$TEST_DIR $SOURCE_DIR/scripts/retry.sh ./build_devel.sh"],
           ["build openpilot", "cd system/manager && ./build.py"],
