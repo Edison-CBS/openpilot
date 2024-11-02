@@ -2,8 +2,8 @@ name: tools
 
 on:
   push:
-    branches:
-      - master
+    branches-ignore:
+      - 'testing-closet*'
   pull_request:
   workflow_call:
     inputs:
