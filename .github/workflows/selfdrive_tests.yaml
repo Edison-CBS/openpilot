@@ -103,6 +103,7 @@ jobs:
   build_mac:
     name: build macOS
     runs-on: namespace-profile-macos-8x14
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'commaai/openpilot'
     steps:
     - uses: actions/checkout@v4
       with:
