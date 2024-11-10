@@ -80,10 +80,6 @@ class Track:
 
     self.cnt += 1
 
-  def get_key_for_cluster(self):
-    # Weigh y higher since radar is inaccurate in this dimension
-    return [self.dRel, self.yRel*2, self.vRel]
-
   def reset_a_lead(self, aLeadK: float, aLeadTau: float):
     self.kf = KF1D([[self.vLead], [aLeadK]], self.K_A, self.K_C, self.K_K)
     self.aLeadK = aLeadK
@@ -243,8 +239,8 @@ class RadarD:
     self.radar_state.radarErrors = list(rr.errors)
     self.radar_state.carStateMonoTime = sm.logMonoTime['carState']
 
-    if len(sm['modelV2'].temporalPose.trans):
-      model_v_ego = sm['modelV2'].temporalPose.trans[0]
+    if len(sm['modelV2'].velocity.x):
+      model_v_ego = sm['modelV2'].velocity.x[0]
     else:
       model_v_ego = self.v_ego
     leads_v3 = sm['modelV2'].leadsV3

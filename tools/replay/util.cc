@@ -329,8 +329,17 @@ std::string decompressZST(const std::byte *in, size_t in_size, std::atomic<bool>
 
   // Initialize input and output buffers
   ZSTD_inBuffer input = {in, in_size, 0};
+
+  // Estimate and reserve memory for decompressed data
+  size_t estimatedDecompressedSize = ZSTD_getFrameContentSize(in, in_size);
+  if (estimatedDecompressedSize == ZSTD_CONTENTSIZE_ERROR || estimatedDecompressedSize == ZSTD_CONTENTSIZE_UNKNOWN) {
+    estimatedDecompressedSize = in_size * 2;  // Use a fallback size
+  }
+
   std::string decompressedData;
-  const size_t bufferSize = ZSTD_DStreamOutSize();  // recommended output buffer size
+  decompressedData.reserve(estimatedDecompressedSize);
+
+  const size_t bufferSize = ZSTD_DStreamOutSize();  // Recommended output buffer size
   std::string outputBuffer(bufferSize, '\0');
 
   while (input.pos < input.size && !(abort && *abort)) {
@@ -379,6 +388,26 @@ std::string sha256(const std::string &str) {
   SHA256_Update(&sha256, str.c_str(), str.size());
   SHA256_Final(hash, &sha256);
   return util::hexdump(hash, SHA256_DIGEST_LENGTH);
+}
+
+std::vector<std::string> split(std::string_view source, char delimiter) {
+  std::vector<std::string> fields;
+  size_t last = 0;
+  for (size_t i = 0; i < source.length(); ++i) {
+    if (source[i] == delimiter) {
+      fields.emplace_back(source.substr(last, i - last));
+      last = i + 1;
+    }
+  }
+  fields.emplace_back(source.substr(last));
+  return fields;
+}
+
+std::string extractFileName(const std::string &file) {
+  size_t queryPos = file.find_first_of("?");
+  std::string path = (queryPos != std::string::npos) ? file.substr(0, queryPos) : file;
+  size_t lastSlash = path.find_last_of("/\\");
+  return (lastSlash != std::string::npos) ? path.substr(lastSlash + 1) : path;
 }
 
 // MonotonicBuffer
