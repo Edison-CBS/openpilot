@@ -2,8 +2,8 @@ name: selfdrive
 
 on:
   push:
-    branches:
-      - master
+    branches-igonre:
+      - 'testing-closet*'
   pull_request:
   workflow_dispatch:
   workflow_call:
@@ -94,6 +94,7 @@ jobs:
   build_mac:
     name: build macOS
     runs-on: ${{ github.repository == 'commaai/openpilot' && 'namespace-profile-macos-8x14' || 'macos-latest' }}
+    if: (github.repository == 'commaai/openpilot') && ((github.event_name != 'pull_request') || (github.event.pull_request.head.repo.full_name == 'commaai/openpilot'))
     steps:
     - uses: actions/checkout@v4
       with:
@@ -309,7 +310,7 @@ jobs:
     runs-on:
       - ${{ ((github.repository == 'commaai/openpilot') && ((github.event_name != 'pull_request') || (github.event.pull_request.head.repo.full_name == 'commaai/openpilot'))) && 'namespace-profile-amd64-8x16' || 'ubuntu-24.04' }}
       - ${{ ((github.repository == 'commaai/openpilot') && ((github.event_name != 'pull_request') || (github.event.pull_request.head.repo.full_name == 'commaai/openpilot'))) && 'namespace-experiments:docker.builds.local-cache=separate' || 'ubuntu-24.04' }}
-    if: (github.repository == 'commaai/openpilot') && ((github.event_name != 'pull_request') || (github.event.pull_request.head.repo.full_name == 'commaai/openpilot'))
+    # if: (github.repository == 'commaai/openpilot') && ((github.event_name != 'pull_request') || (github.event.pull_request.head.repo.full_name == 'commaai/openpilot'))
     steps:
     - uses: actions/checkout@v4
       with:

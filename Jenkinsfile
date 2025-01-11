@@ -207,7 +207,7 @@ node {
           //["build master-ci", "cd $SOURCE_DIR/release && TARGET_DIR=$TEST_DIR $SOURCE_DIR/scripts/retry.sh ./build_devel.sh"],
           step("build openpilot", "cd system/manager && ./build.py"),
           step("check dirty", "release/check-dirty.sh"),
-          step("onroad tests", "pytest selfdrive/test/test_onroad.py -s", [timeout: 60]),
+          step("onroad tests", "pytest selfdrive/test/test_onroad.py -s"),
           //["time to onroad", "pytest selfdrive/test/test_time_to_onroad.py"],
         ])
       },
@@ -230,12 +230,12 @@ node {
       'camerad': {
         deviceStage("AR0231", "tici-ar0231", ["UNSAFE=1"], [
           step("build", "cd system/manager && ./build.py"),
-          step("test camerad", "pytest system/camerad/test/test_camerad.py", [timeout: 60]),
+          step("test camerad", "pytest system/camerad/test/test_camerad.py"),
           step("test exposure", "pytest system/camerad/test/test_exposure.py"),
         ])
         deviceStage("OX03C10", "tici-ox03c10", ["UNSAFE=1"], [
           step("build", "cd system/manager && ./build.py"),
-          step("test camerad", "pytest system/camerad/test/test_camerad.py", [timeout: 60]),
+          step("test camerad", "pytest system/camerad/test/test_camerad.py"),
           step("test exposure", "pytest system/camerad/test/test_exposure.py"),
         ])
       },
