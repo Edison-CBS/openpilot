@@ -13,6 +13,7 @@ private:
   ParamControl* adbToggle;
   ParamControl* joystickToggle;
   ParamControl* longManeuverToggle;
+  ParamControl* cydiaLongitudinalToggle;
   ParamControl* experimentalLongitudinalToggle;
   bool is_release;
   bool offroad = false;

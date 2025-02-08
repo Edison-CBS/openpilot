@@ -143,6 +143,10 @@
         <source>ADB (Android Debug Bridge) allows connecting to your device over USB or over the network. See https://docs.comma.ai/how-to/connect-to-comma for more info.</source>
         <translation>ADB (Android Debug Bridge) permite conectar ao seu dispositivo por meio do USB ou através da rede. Veja https://docs.comma.ai/how-to/connect-to-comma para maiores informações.</translation>
     </message>
+    <message>
+        <source>Cydia Longitudinal Tune</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DevicePanel</name>

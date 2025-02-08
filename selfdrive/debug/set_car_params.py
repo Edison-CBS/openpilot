@@ -16,6 +16,7 @@ if __name__ == "__main__":
     CP = car.CarParams.new_message()
     CP.openpilotLongitudinalControl = True
     CP.experimentalLongitudinalAvailable = True
+    CP.isToyotaPriusV = False
 
   cp_bytes = CP.to_bytes()
   for p in ("CarParams", "CarParamsCache", "CarParamsPersistent"):
