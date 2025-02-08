@@ -63,7 +63,8 @@ class Maneuver:
                             log['acceleration']]))
 
       if d_rel < .4 and (self.only_radar or prob_lead > 0.5):
-        print("Crashed!!!!")
+        # print("Crashed!!!!")
+        print(f"Crashed!!!! d_rel={d_rel}, only_radar={self.only_radar}, prob_lead={prob_lead}")
         valid = False
 
       if self.ensure_start and log['v_rel'] > 0 and log['speeds'][-1] <= 0.1:
