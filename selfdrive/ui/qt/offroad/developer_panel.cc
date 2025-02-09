@@ -62,7 +62,7 @@ void DeveloperPanel::updateToggles(bool _offroad) {
      * - visible, and
      * - during onroad & offroad states
      */
-    if (btn != experimentalLongitudinalToggle && btn != cydiaLongitudinalToggle) {
+    if (btn != experimentalLongitudinalToggle) {
       btn->setEnabled(_offroad);
     }
   }
@@ -90,17 +90,16 @@ void DeveloperPanel::updateToggles(bool _offroad) {
      * - the car supports experimental longitudinal control (alpha)
      */
     experimentalLongitudinalToggle->setVisible(CP.getExperimentalLongitudinalAvailable() && !is_release);
-    cydiaLongitudinalToggle->setVisible(CP.getIsToyotaPriusV());
+    cydiaLongitudinalToggle->setEnabled(CP.getIsToyotaPriusV() && _offroad);
 
     longManeuverToggle->setEnabled(hasLongitudinalControl(CP) && _offroad);
   } else {
     longManeuverToggle->setEnabled(false);
 
     experimentalLongitudinalToggle->setVisible(false);
-    cydiaLongitudinalToggle->setVisible(false);
+    cydiaLongitudinalToggle->setEnabled(false);
   }
   experimentalLongitudinalToggle->refresh();
-  cydiaLongitudinalToggle->refresh();
 
   offroad = _offroad;
 }
