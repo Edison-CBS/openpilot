@@ -204,6 +204,12 @@ class Car:
     CS.vCruise = float(self.v_cruise_helper.v_cruise_kph)
     CS.vCruiseCluster = float(self.v_cruise_helper.v_cruise_cluster_kph)
 
+    # check if CydiaLongitudinalTune has changed and update longitudinalCydiaTuning in real time.
+    new_tuning_value = self.params.get_bool("CydiaLongitudinalTune")
+    if new_tuning_value != self.CP.longitudinalCydiaTuning:
+        cloudlog.info(f"CydiaLongitudinalTune changed: {new_tuning_value}")
+        self.CP.longitudinalCydiaTuning = new_tuning_value
+
     return CS, RD
 
   def state_publish(self, CS: car.CarState, RD: structs.RadarDataT | None):
