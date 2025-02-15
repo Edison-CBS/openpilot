@@ -114,9 +114,7 @@ class Car:
     if not disengage_on_accelerator:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.DISABLE_DISENGAGE_ON_GAS
 
-    self.CP.longitudinalCydiaTuning = False
-    if (self.params.get_bool("CydiaLongitudinalTune")):
-      self.CP.longitudinalCydiaTuning = True
+    self.CP.longitudinalCydiaTuning = self.params.get_bool("CydiaLongitudinalTune")
 
     openpilot_enabled_toggle = self.params.get_bool("OpenpilotEnabledToggle")
 
