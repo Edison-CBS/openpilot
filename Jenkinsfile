@@ -242,7 +242,7 @@ node {
       'camerad OS04C10': {
         deviceStage("OS04C10", "tici-os04c10", ["UNSAFE=1"], [
           step("build", "cd system/manager && ./build.py"),
-          step("test camerad", "pytest system/camerad/test/test_camerad.py", [timeout: 60]),
+          step("test camerad", "pytest system/camerad/test/test_camerad.py"),
           step("test exposure", "pytest system/camerad/test/test_exposure.py"),
         ])
       },
