@@ -2,7 +2,7 @@ name: selfdrive
 
 on:
   push:
-    branches-igonre:
+    branches-ignore:
       - 'testing-closet*'
   pull_request:
   workflow_dispatch:
