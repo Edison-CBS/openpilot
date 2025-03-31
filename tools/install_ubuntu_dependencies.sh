@@ -70,6 +70,7 @@ function install_ubuntu_common_requirements() {
 function install_ubuntu_lts_latest_requirements() {
   install_ubuntu_common_requirements
 
+  $SUDO apt-get update
   $SUDO apt-get install -y --no-install-recommends \
     g++-12 \
     qtbase5-dev \
