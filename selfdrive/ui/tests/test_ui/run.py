@@ -274,19 +274,33 @@ def create_screenshots():
 
   cam = DEVICE_CAMERAS[("tici", "ar0231")]
 
+  os.makedirs(DEFAULT_CACHE_DIR, exist_ok=True)
   frames_cache = f'{DEFAULT_CACHE_DIR}/ui_frames'
-  if os.path.isfile(frames_cache):
-    with open(frames_cache, 'rb') as f:
-      frames = pickle.load(f)
-      road_img = frames[0]
-      wide_road_img = frames[1]
-      driver_img = frames[2]
-  else:
-    with open(frames_cache, 'wb') as f:
+  frames = None
+  use_cache = os.path.isfile(frames_cache)
+  if use_cache:
+    try:
+      with open(frames_cache, 'rb') as f:
+        frames = pickle.load(f)
+        if len(frames) != 3:
+          raise ValueError("Invalid cache: expected 3 frames.")
+        print(f"[INFO] Loaded cached UI frames from {frames_cache}")
+        road_img, wide_road_img, driver_img = frames
+    except (EOFError, pickle.UnpicklingError, ValueError) as e:
+      print(f"[WARNING] Failed to load cache ({frames_cache}): {e}. Regenerating...")
+      os.remove(frames_cache)
+      use_cache = False
+
+  if not use_cache:
+    try:
       road_img = FrameReader(route.camera_paths()[segnum]).get(0, pix_fmt="nv12")[0]
       wide_road_img = FrameReader(route.ecamera_paths()[segnum]).get(0, pix_fmt="nv12")[0]
       driver_img = FrameReader(route.dcamera_paths()[segnum]).get(0, pix_fmt="nv12")[0]
-      pickle.dump([road_img, wide_road_img, driver_img], f)
+      with open(frames_cache, 'wb') as f:
+        pickle.dump([road_img, wide_road_img, driver_img], f)
+    except Exception as e:
+      print(f"[ERROR] Failed to extract frame from segment {segnum}: {e}")
+      return
 
   STREAMS.append((VisionStreamType.VISION_STREAM_ROAD, cam.fcam, road_img.flatten().tobytes()))
   STREAMS.append((VisionStreamType.VISION_STREAM_WIDE_ROAD, cam.ecam, wide_road_img.flatten().tobytes()))
