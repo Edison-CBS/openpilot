@@ -114,7 +114,13 @@ class Car:
     if not disengage_on_accelerator:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.DISABLE_DISENGAGE_ON_GAS
 
-    self.CP.longitudinalCydiaTuning = False if REPLAY else self.params.get_bool("CydiaLongitudinalTune")
+    longitudinalCydiaTuning = False
+    try:
+      if not REPLAY:
+        longitudinalCydiaTuning = self.params.get_bool("CydiaLongitudinalTune")
+    except Exception:
+      longitudinalCydiaTuning = False
+    self.CP.longitudinalCydiaTuning = longitudinalCydiaTuning
     self._last_params = {
       "CydiaLongitudinalTune": self.CP.longitudinalCydiaTuning,
     }
