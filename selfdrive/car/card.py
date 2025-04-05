@@ -78,6 +78,8 @@ class Car:
     self.last_actuators_output = structs.CarControl.Actuators()
 
     self.params = Params()
+    if REPLAY:
+      self.params.put_bool("CydiaLongitudinalTune", False)
 
     self.can_callbacks = can_comm_callbacks(self.can_sock, self.pm.sock['sendcan'])
 
@@ -115,6 +117,9 @@ class Car:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.DISABLE_DISENGAGE_ON_GAS
 
     self.CP.longitudinalCydiaTuning = self.params.get_bool("CydiaLongitudinalTune")
+    self._last_params = {
+      "CydiaLongitudinalTune": self.CP.longitudinalCydiaTuning,
+    }
 
     openpilot_enabled_toggle = self.params.get_bool("OpenpilotEnabledToggle")
 
@@ -201,13 +206,22 @@ class Car:
     CS.vCruise = float(self.v_cruise_helper.v_cruise_kph)
     CS.vCruiseCluster = float(self.v_cruise_helper.v_cruise_cluster_kph)
 
-    # check if CydiaLongitudinalTune has changed and update longitudinalCydiaTuning in real time.
-    new_tuning_value = self.params.get_bool("CydiaLongitudinalTune")
-    if new_tuning_value != self.CP.longitudinalCydiaTuning:
-        cloudlog.info(f"CydiaLongitudinalTune changed: {new_tuning_value}")
-        self.CP.longitudinalCydiaTuning = new_tuning_value
+    # Called in state_update() to ensure tuning settings can be changed in real-time
+    self.update_runtime_params()
 
     return CS, RD
+
+  def update_runtime_params(self):
+    self._check_param_bool("CydiaLongitudinalTune", "longitudinalCydiaTuning")
+
+  def _check_param_bool(self, param_key: str, cp_attr: str):
+    if REPLAY:
+      return
+    new_val = self.params.get_bool(param_key)
+    if self._last_params.get(param_key) != new_val:
+      cloudlog.info(f"[{self.CP.carFingerprint}] {param_key} changed: {new_val}")
+      setattr(self.CP, cp_attr, new_val)
+      self._last_params[param_key] = new_val
 
   def state_publish(self, CS: car.CarState, RD: structs.RadarDataT | None):
     """carState and carParams publish loop"""
