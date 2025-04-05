@@ -78,8 +78,6 @@ class Car:
     self.last_actuators_output = structs.CarControl.Actuators()
 
     self.params = Params()
-    if REPLAY:
-      self.params.put_bool("CydiaLongitudinalTune", False)
 
     self.can_callbacks = can_comm_callbacks(self.can_sock, self.pm.sock['sendcan'])
 
@@ -116,7 +114,7 @@ class Car:
     if not disengage_on_accelerator:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.DISABLE_DISENGAGE_ON_GAS
 
-    self.CP.longitudinalCydiaTuning = self.params.get_bool("CydiaLongitudinalTune")
+    self.CP.longitudinalCydiaTuning = False if REPLAY else self.params.get_bool("CydiaLongitudinalTune")
     self._last_params = {
       "CydiaLongitudinalTune": self.CP.longitudinalCydiaTuning,
     }
