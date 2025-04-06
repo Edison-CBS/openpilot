@@ -3,7 +3,6 @@ import argparse
 import concurrent.futures
 import os
 import sys
-import traceback
 from collections import defaultdict
 from tqdm import tqdm
 from typing import Any
@@ -73,29 +72,19 @@ EXCLUDED_PROCS = {"modeld", "dmonitoringmodeld"}
 def run_test_process(data):
   segment, cfg, args, cur_log_fn, ref_log_path, lr_dat = data
   res = None
-  try:
-    print(f"[START] Segment: {segment}, Proc: {cfg.proc_name}")
-    if not args.upload_only:
-      lr = LogReader.from_bytes(lr_dat)
-      res, log_msgs = test_process(cfg, lr, segment, ref_log_path, cur_log_fn, args.ignore_fields, args.ignore_msgs)
-      # save logs so we can upload when updating refs
-      save_log(cur_log_fn, log_msgs)
+  if not args.upload_only:
+    lr = LogReader.from_bytes(lr_dat)
+    res, log_msgs = test_process(cfg, lr, segment, ref_log_path, cur_log_fn, args.ignore_fields, args.ignore_msgs)
+    # save logs so we can upload when updating refs
+    save_log(cur_log_fn, log_msgs)
 
-    if args.update_refs or args.upload_only:
-      print(f"[UPLOAD] Uploading: {os.path.basename(cur_log_fn)}")
-      assert os.path.exists(cur_log_fn), f"Cannot find log to upload: {cur_log_fn}"
-      upload_file(cur_log_fn, os.path.basename(cur_log_fn))
-      os.remove(cur_log_fn)
-
-    print(f"[DONE] {segment} - {cfg.proc_name}")
-
-  except Exception as e:
-    print(f"[FAIL] {segment} - {cfg.proc_name}: {str(e)}")
-    print(f"Exception: {e}")
-    traceback.print_exc()
-    raise
-
+  if args.update_refs or args.upload_only:
+    print(f'Uploading: {os.path.basename(cur_log_fn)}')
+    assert os.path.exists(cur_log_fn), f"Cannot find log to upload: {cur_log_fn}"
+    upload_file(cur_log_fn, os.path.basename(cur_log_fn))
+    os.remove(cur_log_fn)
   return (segment, cfg.proc_name, res)
+
 
 def get_log_data(segment):
   r, n = segment.rsplit("--", 1)
@@ -104,8 +93,6 @@ def get_log_data(segment):
 
 
 def test_process(cfg, lr, segment, ref_log_path, new_log_path, ignore_fields=None, ignore_msgs=None):
-  print(f"[TEST] Starting replay: {segment} - {cfg.proc_name}")
-
   if ignore_fields is None:
     ignore_fields = []
   if ignore_msgs is None:
@@ -116,10 +103,7 @@ def test_process(cfg, lr, segment, ref_log_path, new_log_path, ignore_fields=Non
   try:
     log_msgs = replay_process(cfg, lr, disable_progress=True)
   except Exception as e:
-    print(f"[REPLAY FAILED] {segment} - {cfg.proc_name}: {str(e)}")
     raise Exception("failed on segment: " + segment) from e
-
-  print(f"[REPLAY OK] {segment} - {cfg.proc_name}")
 
   if not check_most_messages_valid(log_msgs):
     return f"Route did not have enough valid messages: {new_log_path}", log_msgs
@@ -231,7 +215,6 @@ if __name__ == "__main__":
     results: Any = defaultdict(dict)
     p2 = pool.map(run_test_process, pool_args)
     for (segment, proc, result) in tqdm(p2, desc="Running Tests", total=len(pool_args)):
-      print(f"[RUNNING] {segment} - {proc} => {result if result else 'OK'}")
       if not args.upload_only:
         results[segment][proc] = result
 
