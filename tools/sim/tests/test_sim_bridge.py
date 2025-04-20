@@ -64,6 +64,7 @@ class TestSimBridgeBase:
       sm.update()
 
       if sm.all_alive() and sm['selfdriveState'].active:
+        print(f"[DEBUG] control_active step {control_active}: active={sm['selfdriveState'].active}")
         control_active += 1
 
         if control_active == min_counts_control_active:
@@ -81,7 +82,13 @@ class TestSimBridgeBase:
         done_info = state.info
         failure_states = [done_state for done_state in done_info if done_state != "timeout" and done_info[done_state]]
         break
-    assert len(failure_states) == 0, f"Simulator fails to finish a loop. Failure states: {failure_states}"
+      assert len(failure_states) == 0, (
+        "Simulator fails to finish a loop.\n" +
+        f"Failure states: {failure_states}\n" +
+        f"Control active count: {control_active} / {min_counts_control_active}\n" +
+        f"Manager processes not running: {not_running}\n" +
+        f"CarEvent issues: {car_event_issues}\n"
+      )
 
   def teardown_method(self):
     print("Test shutting down. CommIssues are acceptable")
