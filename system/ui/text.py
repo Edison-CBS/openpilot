@@ -27,8 +27,10 @@ def wrap_text(text, font_size, max_width):
       continue
     indent = re.match(r"^\s*", paragraph).group()
     current_line = indent
-    for word in paragraph.split():
-      test_line = current_line + word + " "
+    words = re.split(r"(\s+)", paragraph[len(indent):])
+    while len(words):
+      word = words.pop(0)
+      test_line = current_line + word + (words.pop(0) if words else "")
       if rl.measure_text_ex(font, test_line, font_size, 0).x <= max_width:
         current_line = test_line
       else:
@@ -46,6 +48,7 @@ class TextWindow:
     self._wrapped_lines = wrap_text(text, FONT_SIZE, self._textarea_rect.width - 20)
     self._content_rect = rl.Rectangle(0, 0, self._textarea_rect.width - 20, len(self._wrapped_lines) * LINE_HEIGHT)
     self._scroll_panel = GuiScrollPanel(show_vertical_scroll_bar=True)
+    self._scroll_panel._offset.y = -max(self._content_rect.height - self._textarea_rect.height, 0)
 
   def render(self):
     scroll = self._scroll_panel.handle_scroll(self._textarea_rect, self._content_rect)
