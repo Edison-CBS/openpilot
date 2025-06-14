@@ -1,4 +1,3 @@
-import abc
 import atexit
 import os
 import time
@@ -25,12 +24,6 @@ DEFAULT_TEXT_COLOR = rl.WHITE
 
 ASSETS_DIR = files("openpilot.selfdrive").joinpath("assets")
 FONT_DIR = ASSETS_DIR.joinpath("fonts")
-
-
-class Widget(abc.ABC):
-  @abc.abstractmethod
-  def render(self, rect: rl.Rectangle) -> bool | None:
-    """Render the widget within the given rectangle."""
 
 
 class FontWeight(IntEnum):
@@ -176,9 +169,11 @@ class GuiApplication:
           else:
             raise Exception
 
-          if result >= 0 and self._modal_overlay.callback is not None:
+          if result >= 0:
             # Execute callback with the result and clear the overlay
-            self._modal_overlay.callback(result)
+            if self._modal_overlay.callback is not None:
+              self._modal_overlay.callback(result)
+
             self._modal_overlay = ModalOverlay()
         else:
           yield
@@ -229,7 +224,7 @@ class GuiApplication:
     for layout in KEYBOARD_LAYOUTS.values():
       all_chars.update(key for row in layout for key in row)
     all_chars = "".join(all_chars)
-    all_chars += "-"
+    all_chars += "–✓"
 
     codepoint_count = rl.ffi.new("int *", 1)
     codepoints = rl.load_codepoints(all_chars, codepoint_count)

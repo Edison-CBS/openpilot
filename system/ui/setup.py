@@ -9,9 +9,10 @@ import pyray as rl
 
 from cereal import log
 from openpilot.system.hardware import HARDWARE
-from openpilot.system.ui.lib.application import gui_app, FontWeight, Widget
+from openpilot.system.ui.lib.application import gui_app, FontWeight
 from openpilot.system.ui.lib.button import gui_button, ButtonStyle
 from openpilot.system.ui.lib.label import gui_label, gui_text_box
+from openpilot.system.ui.lib.widget import Widget
 from openpilot.system.ui.widgets.network import WifiManagerUI, WifiManagerWrapper
 from openpilot.system.ui.widgets.keyboard import Keyboard
 
@@ -41,6 +42,7 @@ class SetupState(IntEnum):
 
 class Setup(Widget):
   def __init__(self):
+    super().__init__()
     self.state = SetupState.GETTING_STARTED
     self.network_check_thread = None
     self.network_connected = threading.Event()
@@ -67,7 +69,7 @@ class Setup(Widget):
     except (FileNotFoundError, ValueError):
       self.state = SetupState.LOW_VOLTAGE
 
-  def render(self, rect: rl.Rectangle):
+  def _render(self, rect: rl.Rectangle):
     if self.state == SetupState.LOW_VOLTAGE:
       self.render_low_voltage(rect)
     elif self.state == SetupState.GETTING_STARTED:

@@ -3,13 +3,14 @@ from threading import Lock
 from typing import Literal
 
 import pyray as rl
-from openpilot.system.ui.lib.application import gui_app, Widget
+from openpilot.system.ui.lib.application import gui_app
 from openpilot.system.ui.lib.button import ButtonStyle, gui_button
 from openpilot.system.ui.lib.label import gui_label
 from openpilot.system.ui.lib.scroll_panel import GuiScrollPanel
 from openpilot.system.ui.lib.wifi_manager import NetworkInfo, WifiManagerCallbacks, WifiManagerWrapper, SecurityType
 from openpilot.system.ui.widgets.keyboard import Keyboard
 from openpilot.system.ui.widgets.confirm_dialog import confirm_dialog
+from openpilot.system.ui.lib.widget import Widget
 
 NM_DEVICE_STATE_NEED_AUTH = 60
 MIN_PASSWORD_LENGTH = 8
@@ -59,6 +60,7 @@ UIState = StateIdle | StateConnecting | StateNeedsAuth | StateShowForgetConfirm 
 
 class WifiManagerUI(Widget):
   def __init__(self, wifi_manager: WifiManagerWrapper):
+    super().__init__()
     self.state: UIState = StateIdle()
     self.btn_width: int = 200
     self.scroll_panel = GuiScrollPanel()
@@ -80,7 +82,7 @@ class WifiManagerUI(Widget):
     self.wifi_manager.start()
     self.wifi_manager.connect()
 
-  def render(self, rect: rl.Rectangle):
+  def _render(self, rect: rl.Rectangle):
     with self._lock:
       if not self._networks:
         gui_label(rect, "Scanning Wi-Fi networks...", 72, alignment=rl.GuiTextAlignment.TEXT_ALIGN_CENTER)
