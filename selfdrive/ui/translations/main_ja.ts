@@ -312,27 +312,27 @@
     </message>
     <message>
         <source>openpilot requires the device to be mounted within 4° left or right and within 5° up or 9° down.</source>
-        <translation type="unfinished"></translation>
+        <translation>openpilotの本体は左右4°以内、上5°下9°以内の角度で取付ける必要があります。</translation>
     </message>
     <message>
         <source>Steering lag calibration is %1% complete.</source>
-        <translation type="unfinished"></translation>
+        <translation>ステアリング遅延のキャリブレーションが%1％完了。</translation>
     </message>
     <message>
         <source>Steering lag calibration is complete.</source>
-        <translation type="unfinished"></translation>
+        <translation>ステアリング遅延のキャリブレーション完了。</translation>
     </message>
     <message>
         <source>Steering torque response calibration is %1% complete.</source>
-        <translation type="unfinished"></translation>
+        <translation>ステアリングトルク応答のキャリブレーションが%1％完了。</translation>
     </message>
     <message>
         <source>Steering torque response calibration is complete.</source>
-        <translation type="unfinished"></translation>
+        <translation>ステアリングトルク応答のキャリブレーション完了。</translation>
     </message>
     <message>
         <source>openpilot is continuously calibrating, resetting is rarely required. Resetting calibration will restart openpilot if the car is powered on.</source>
-        <translation type="unfinished"></translation>
+        <translation>openpilot は継続的にキャリブレーションを行っており、リセットが必要になることはほとんどありません。キャリブレーションをリセットすると、車の電源が入っている場合はopenpilotが再起動します。</translation>
     </message>
 </context>
 <context>
@@ -387,7 +387,7 @@ Firehoseモードを有効にすると学習データを最大限アップロー
     </message>
     <message>
         <source>Firehose Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Firehoseモード</translation>
     </message>
 </context>
 <context>
@@ -805,6 +805,16 @@ This may take up to a minute.</source>
     <message>
         <source>Custom Software</source>
         <translation>カスタムソフトウェア</translation>
+    </message>
+    <message>
+        <source>WARNING: Custom Software</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use caution when installing third-party software. Third-party software has not been tested by comma, and may cause damage to your device and/or vehicle.
+
+If you&apos;d like to proceed, use https://flash.comma.ai to restore your device to a factory state later.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
