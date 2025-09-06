@@ -219,7 +219,7 @@ node {
         ])
       },
       'loopback': {
-        deviceStage("loopback", "tizi-loopback", ["UNSAFE=1"], [
+        deviceStage("loopback", "tici-loopback", ["UNSAFE=1"], [
           step("build openpilot", "cd system/manager && ./build.py"),
           step("test pandad loopback", "pytest selfdrive/pandad/tests/test_pandad_loopback.py"),
         ])
