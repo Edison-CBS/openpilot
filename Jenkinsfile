@@ -242,6 +242,10 @@ node {
           step("build", "cd system/manager && ./build.py"),
           step("test sensord", "pytest system/sensord/tests/test_sensord.py"),
         ])
+        deviceStage("BMX + LSM", "tici-bmx-lsm", ["UNSAFE=1"], [
+          step("build", "cd system/manager && ./build.py"),
+          step("test sensord", "pytest system/sensord/tests/test_sensord.py"),
+        ])
       },
       'replay': {
         deviceStage("model-replay", "tizi-replay", ["UNSAFE=1"], [
